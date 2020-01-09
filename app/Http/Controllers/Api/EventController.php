@@ -42,7 +42,7 @@ class EventController extends Controller
 
         $event = Event::create($request->all());
 
-        return response()->json(['event' => $event], 200);
+        return new EventResource($event);
 
     }
 
@@ -52,11 +52,9 @@ class EventController extends Controller
      * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Event $event)
     {
-        $event = Event::find($id);
-        return new EventResource(Event::find($id));
-        // return response()->json(['event' => $event], 200);
+        return new EventResource($event);
     }
 
     /**
@@ -68,7 +66,16 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name'=> 'min:2',
+            'description' => 'min:5'
+
+        ]);
+
+        if($validator->fails()) return response()->json('fail', 422);
+        
+        $event->update(request()->all());
+        return new EventResource($event);
     }
 
     /**
@@ -79,6 +86,7 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        //
+        $event->delete();
+        return response('success', 200);
     }
 }
