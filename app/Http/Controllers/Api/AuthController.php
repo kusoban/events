@@ -4,19 +4,42 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\User;
+use App\Http\Resources\User as UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Auth;
+
 class AuthController extends Controller
 {
     public function register(Request $request) {
-        $email = request('email');
-        $password = request('password');
-        $user = User::create(['email' => $email, 'password' => bcrypt($password)]);
-        
-        $accessToken = $user->createToken('authToken')->accessToken;
+        $rules = [
+            'name' => 'required',
+            'email' => "required|email|unique:users",
+            'password' => 'required|min:6|confirmed',
+        ];
 
-        return response()->json(['email' => $user->email, 'token' => $accessToken], 200);
+        $this->validate($request, $rules);
+
+        $data = $request->all();
+        $data['password'] = bcrypt($request->password);
+        $data['verified'] = User::UNVERIFIED_USER;
+        $data['verification_token'] = User::generateVerificationCode();
+        $data['admin'] = User::REGULAR_USER;
+
+        $user = User::create($data);
+        
+        $request->request->add([
+                'grant_type' => 'password',
+                'username' => $request->email,
+                'client_id' => 2,
+                'client_secret' => 'nzbemZDtqVfv3zi6ppY3N5EBeTiQl9IkkaZ6cLwC',
+                'scope' => '',
+        ]);
+
+        $tokenRequest = Request::create('/oauth/token', 'POST');
+        $tokenData = json_decode(Route::dispatch($tokenRequest)->getContent());
+
+        return response()->json(['user' => new UserResource($user), 'token_data' => $tokenData, ], 200);
     }
 
     public function resetPassword() {
@@ -36,7 +59,7 @@ class AuthController extends Controller
                 'client_secret' => 'Az2gLVGdZoKf6ttCTAbsKo2Qv8DVxsFqtNa7447F',
                 'scope' => '',
         ]);
-
+      
         $tokenRequest = Request::create('/oauth/token', 'POST');
         $result = json_decode(Route::dispatch($tokenRequest)->getContent());
         $result->email = auth()->user()->email;
@@ -46,6 +69,6 @@ class AuthController extends Controller
 
     public function getAuthenticatedUser () {
         $user = auth()->user();
-        return response()->json(['email'=> $user->email], 200);
+        return new UserResource($user);
     }
 }

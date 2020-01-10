@@ -14,14 +14,11 @@ class CreateCategoryEventTable extends Migration
     public function up()
     {
         Schema::create('category_event', function (Blueprint $table) {
-            $table->bigIncrements('id');
             $table->bigInteger('category_id')->unsigned();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
 
             $table->bigInteger('event_id')->unsigned();
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
-            
-            $table->timestamps();
         });
     }
 

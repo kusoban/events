@@ -24,6 +24,10 @@ Route::middleware('auth:api')->post('/reset-password', 'Api\AuthController@reset
 
 Route::middleware('auth:api')->post('me', 'Api\AuthController@getAuthenticatedUser');
 
+Route::group(['prefix' => 'users'], function(){
+    Route::post('/', 'Api\UserController@store');
+});
+
 Route::group(['prefix' => 'events'], function(){
     Route::get('/', 'Api\EventController@index');
     Route::get('/{event}', [ 'as' => 'show-event', 'uses' => 'Api\EventController@show']);

@@ -17,9 +17,12 @@ class Event extends JsonResource
         // return parent::toArray($request);
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
+            'creator_id' => $this->creator_id,
+            'creator_email' => $this->creator_email,
             'name' => $this->name,
             'description' => $this->description,
+            'categories' => $this->categories()->get()->pluck('name'),
+            'tags' => $this->tags()->get()->pluck('name') 
         ];
 
     }

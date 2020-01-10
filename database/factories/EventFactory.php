@@ -18,10 +18,12 @@ use Illuminate\Support\Str;
 */
 
 $factory->define(Event::class, function (Faker $faker) {
+    $user = User::all()->random();
     return [
         'name' => $faker->word,
         'description' => $faker->paragraph(1),
         'image' => $faker->randomElement(['1.png', '2.jpg', '3.jpg']),
-        'user_id' => User::all()->random()->id
+        'creator_id' => $user->id,
+        'creator_email' => $user->email
     ];
 });

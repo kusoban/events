@@ -14,16 +14,11 @@ class CreateEventTagTable extends Migration
     public function up()
     {
         Schema::create('event_tag', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            
             $table->bigInteger('event_id')->unsigned();
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
 
             $table->bigInteger('tag_id')->unsigned();
             $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
-            
-            $table->timestamps();
-
         });
     }
 
