@@ -8,9 +8,25 @@ use App\Http\Resources\User as UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Auth;
+use GuzzleHttp\Client;
 
 class AuthController extends Controller
 {
+    public function testreg(Request $request) {
+        $http = new Client([ 'base_uri' => 'http://events.api/public/','timeout' => 0]);
+        $response = $http->post('/oauth/token', [
+            'form_params' => [
+                'grant_type' => 'password',
+                'username' => 'george@george323322.george',
+                'password'=> '123123123',
+                'client_id' => '2',
+                'client_secret' => 'kHQNoMlGKBGr6tby2U6UW4xsRCZeQfqWhNSc3OQE',
+                'scope' => '',
+            ],
+        ]);    
+        return $response;
+}
+
     public function register(Request $request) {
         $rules = [
             'name' => 'required',
@@ -20,19 +36,21 @@ class AuthController extends Controller
 
         $this->validate($request, $rules);
 
-        $data = $request->all();
-        $data['password'] = bcrypt($request->password);
-        $data['verified'] = User::UNVERIFIED_USER;
-        $data['verification_token'] = User::generateVerificationCode();
-        $data['admin'] = User::REGULAR_USER;
+        $user = User::create([
+            'email' => request('email'),
+            'name' => request('name'),
+            'password' => bcrypt($request->password),
+            'verified' => User::UNVERIFIED_USER,
+            'verification_token' => User::generateVerificationCode(),
+            'admin' => User::REGULAR_USER,
+        ]);
 
-        $user = User::create($data);
         
-        $request->request->add([
+        request()->request->add([
                 'grant_type' => 'password',
-                'username' => $request->email,
+                'username' => request()->email,
                 'client_id' => 2,
-                'client_secret' => 'nzbemZDtqVfv3zi6ppY3N5EBeTiQl9IkkaZ6cLwC',
+                'client_secret' => 'kHQNoMlGKBGr6tby2U6UW4xsRCZeQfqWhNSc3OQE',
                 'scope' => '',
         ]);
 
@@ -47,7 +65,7 @@ class AuthController extends Controller
     }
 
     public function login(Request $request) {
-        $auth = auth()->attempt(['email' => $request->username, 'password' => $request->password]);
+        $auth = auth()->attempt(['email' => request()->username, 'password' => request()->password]);
         
         if(!$auth) {
             return response('Unauthenticated', 403);
@@ -56,7 +74,7 @@ class AuthController extends Controller
         $request->request->add([
                 'grant_type' => 'password',
                 'client_id' => '4',
-                'client_secret' => 'Az2gLVGdZoKf6ttCTAbsKo2Qv8DVxsFqtNa7447F',
+                'client_secret' => 'kHQNoMlGKBGr6tby2U6UW4xsRCZeQfqWhNSc3OQE',
                 'scope' => '',
         ]);
       

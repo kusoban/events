@@ -29,7 +29,6 @@ class User extends Authenticatable
         'verified',
         'verification_token',
         'admin'
-
     ];
 
     /**

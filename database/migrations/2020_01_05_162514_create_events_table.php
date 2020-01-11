@@ -17,9 +17,9 @@ class CreateEventsTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('description');
-            $table->string('image');
-            $table->timestamps();
+            $table->string('image')->nullable();
             $table->string('creator_email');
+            $table->timestamps();
             
             $table->bigInteger('creator_id')->unsigned();
             $table->foreign('creator_id')->references('id')->on('users');

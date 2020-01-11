@@ -19,12 +19,14 @@ use Illuminate\Http\Request;
 // });
 
 Route::post('/register', 'Api\AuthController@register');
+Route::post('/testreg', 'Api\AuthController@testreg');
 Route::post('/login', 'Api\AuthController@login');
 Route::middleware('auth:api')->post('/reset-password', 'Api\AuthController@resetPassword');
 
 Route::middleware('auth:api')->post('me', 'Api\AuthController@getAuthenticatedUser');
 
 Route::group(['prefix' => 'users'], function(){
+    Route::get('/', 'Api\UserController@index');
     Route::post('/', 'Api\UserController@store');
 });
 

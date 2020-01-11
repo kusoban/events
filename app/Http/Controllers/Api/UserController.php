@@ -16,7 +16,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $users = User::all();
+        return $users;
     }
 
     /**
@@ -27,7 +28,6 @@ class UserController extends Controller
      */
   public function store(Request $request)
     {
-        // return response()->json(['data'=>'kek'], 201);
 
         $rules = [
             'name' => 'required',
@@ -35,10 +35,10 @@ class UserController extends Controller
             'password' => 'required|min:6|confirmed',
         ];
 
-        $this->validate($request, $rules);
-
-        $data = $request->all();
-        $data['password'] = bcrypt($request->password);
+        $this->validate(request(), $rules);
+        $data['name'] = request()->name;
+        $data['email'] = request()->email;
+        $data['password'] = bcrypt(request()->password);
         $data['verified'] = User::UNVERIFIED_USER;
         $data['verification_token'] = User::generateVerificationCode();
         $data['admin'] = User::REGULAR_USER;

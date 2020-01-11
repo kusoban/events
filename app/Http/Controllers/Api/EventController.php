@@ -6,6 +6,8 @@ use App\Event;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Tag;
+use App\Category;
 
 use App\Http\Resources\Event as EventResource;
 
@@ -31,16 +33,26 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $user = auth()->user();
+        
+        request()->validate([
             'name' => 'required|min:2',
-            'description' => 'required',
+            'description' => 'required|min:5'
         ]);
 
-        if($validator->fails()) {
-            return response()->json('fail', 422);
-        }
+        $event = request()->all();
+        $event['creator_id'] = $user->id;
+        $event['creator_email'] = $user->email;
 
-        $event = Event::create($request->all());
+        $event = Event::create( $event );
+      
+        if(request()->categories) {
+            $event->addCategories(request()->categories);
+            
+        }
+        if(request()->tags) {
+            $event->addTags(request()->tags);
+        }
 
         return new EventResource($event);
 
@@ -66,14 +78,11 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        $validator = Validator::make($request->all(), [
-            'name'=> 'min:2',
-            'description' => 'min:5'
-
+       request()->validate([
+            'name' => 'required|min:2',
+            'description' => 'required|min:5'
         ]);
 
-        if($validator->fails()) return response()->json('fail', 422);
-        
         $event->update(request()->all());
         return new EventResource($event);
     }
