@@ -19,7 +19,7 @@ use Illuminate\Http\Request;
 // });
 
 Route::post('/register', 'Api\AuthController@register');
-Route::post('/testreg', 'Api\AuthController@testreg');
+Route::post('/test', 'Api\AuthController@test');
 Route::post('/login', 'Api\AuthController@login');
 Route::middleware('auth:api')->post('/reset-password', 'Api\AuthController@resetPassword');
 
@@ -32,6 +32,7 @@ Route::group(['prefix' => 'users'], function(){
 
 Route::group(['prefix' => 'events'], function(){
     Route::get('/', 'Api\EventController@index');
+    Route::get('/search', 'Api\EventController@search');
     Route::get('/{event}', [ 'as' => 'show-event', 'uses' => 'Api\EventController@show']);
     Route::post('/', 'Api\EventController@store')->middleware('auth:api');
     Route::put('/{event}', 'Api\EventController@update')->middleware('auth:api');

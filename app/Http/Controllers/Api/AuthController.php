@@ -7,20 +7,24 @@ use App\User;
 use App\Http\Resources\User as UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Auth;
 use GuzzleHttp\Client;
+
 
 class AuthController extends Controller
 {
+    private static $grant_type = 'password';
+    private static $client_id = '2';
+    private static $client_secret = 'kHQNoMlGKBGr6tby2U6UW4xsRCZeQfqWhNSc3OQE';
+
     public function testreg(Request $request) {
-        $http = new Client([ 'base_uri' => 'http://events.api/public/','timeout' => 0]);
+        $http = new Client([ 'base_uri' => 'http://events.api/','timeout' => 0]);
         $response = $http->post('/oauth/token', [
             'form_params' => [
-                'grant_type' => 'password',
+                'grant_type' => self::$grant_type,
                 'username' => 'george@george323322.george',
                 'password'=> '123123123',
-                'client_id' => '2',
-                'client_secret' => 'kHQNoMlGKBGr6tby2U6UW4xsRCZeQfqWhNSc3OQE',
+                'client_id' => self::$client_id,
+                'client_secret' => self::$client_secret,
                 'scope' => '',
             ],
         ]);    
@@ -45,37 +49,37 @@ class AuthController extends Controller
             'admin' => User::REGULAR_USER,
         ]);
 
+        $http = new Client([ 'base_uri' => 'http://events.api/','timeout' => 0]);
         
-        request()->request->add([
-                'grant_type' => 'password',
+        $tokenResponse = $http->post('/oauth/token', [
+            'form_params' => [
+                'grant_type' => self::$grant_type,
                 'username' => request()->email,
-                'client_id' => 2,
-                'client_secret' => 'kHQNoMlGKBGr6tby2U6UW4xsRCZeQfqWhNSc3OQE',
+                'password'=> request()->password,
+                'client_id' => self::$client_id,
+                'client_secret' => self::$client_secret,
                 'scope' => '',
-        ]);
+            ],
+        ]); 
 
-        $tokenRequest = Request::create('/oauth/token', 'POST');
-        $tokenData = json_decode(Route::dispatch($tokenRequest)->getContent());
-
-        return response()->json(['user' => new UserResource($user), 'token_data' => $tokenData, ], 200);
-    }
-
-    public function resetPassword() {
-        $user = auth()->user();
+        return response()->json([
+            'user' => new UserResource($user),
+            'token_data' => json_decode((string) $tokenResponse->getBody(), true),
+        ], 200);
     }
 
     public function login(Request $request) {
-        $auth = auth()->attempt(['email' => request()->username, 'password' => request()->password]);
+        $auth = auth()->attempt(['email' => request()->email, 'password' => request()->password]);
         
         if(!$auth) {
             return response('Unauthenticated', 403);
         }
 
         $request->request->add([
-                'grant_type' => 'password',
-                'client_id' => '4',
-                'client_secret' => 'kHQNoMlGKBGr6tby2U6UW4xsRCZeQfqWhNSc3OQE',
-                'scope' => '',
+            'grant_type' => self::$grant_type,
+            'client_id' => self::$client_id,
+            'client_secret' => self::$client_secret,
+            'scope' => '',
         ]);
       
         $tokenRequest = Request::create('/oauth/token', 'POST');
