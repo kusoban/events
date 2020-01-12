@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Event;
+use App\Category;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Tag;
-use App\Category;
 
 use App\Http\Resources\Event as EventResource;
+use App\Http\Resources\Category as CategoryResource;
 
 class EventController extends Controller
 {
@@ -20,7 +21,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = Event::latest()->get();
+        $events = Event::paginate(10);
 
         return EventResource::collection($events);
     }
@@ -99,26 +100,4 @@ class EventController extends Controller
         return response('success', 200);
     }
 
-    public function search() {
-        if(request()->has('category') && !empty(request()->category)) {
-            $events = Event::whereHas('categories', function($q) {
-                $q->where('name', request()->category);
-            })->with(['categories', 'tags']);
-        };
-
-        if(request()->has('tag') && !empty(request()->tag)) {
-            $tags = request('tags');
-            $tagsArray = [$tags];
-
-            if(stripos($tags, ',') >= 0) {
-                $tagsArray = explode(',', $tags);
-                $tagsArray = array_filter($tagsArray, 'is_numeric');
-            }
-
-            $events->whereHas('tags', function($q) use ($tagsArray) {
-                $q->whereIn('name', $tagsArray);
-            });
-        }
-        return $events->get();
-    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'test' => 'pepa',
 
     /*
     |--------------------------------------------------------------------------
@@ -174,6 +175,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Laravel\Scout\ScoutServiceProvider::class,
 
     ],
 

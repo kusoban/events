@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 // use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\DB;
+use App\Event;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,13 +19,16 @@ use Illuminate\Http\Request;
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-
 Route::post('/register', 'Api\AuthController@register');
 Route::post('/test', 'Api\AuthController@test');
 Route::post('/login', 'Api\AuthController@login');
 Route::middleware('auth:api')->post('/reset-password', 'Api\AuthController@resetPassword');
 
 Route::middleware('auth:api')->post('me', 'Api\AuthController@getAuthenticatedUser');
+
+Route::group(['prefix' => 'search'], function(){
+    Route::get('/category', 'Api\SearchController@category');
+});
 
 Route::group(['prefix' => 'users'], function(){
     Route::get('/', 'Api\UserController@index');
@@ -32,7 +37,7 @@ Route::group(['prefix' => 'users'], function(){
 
 Route::group(['prefix' => 'events'], function(){
     Route::get('/', 'Api\EventController@index');
-    Route::get('/search', 'Api\EventController@search');
+    Route::get('/filter', 'Api\EventController@filter');
     Route::get('/{event}', [ 'as' => 'show-event', 'uses' => 'Api\EventController@show']);
     Route::post('/', 'Api\EventController@store')->middleware('auth:api');
     Route::put('/{event}', 'Api\EventController@update')->middleware('auth:api');

@@ -13,8 +13,6 @@ use GuzzleHttp\Client;
 class AuthController extends Controller
 {
     private static $grant_type = 'password';
-    private static $client_id = '2';
-    private static $client_secret = 'kHQNoMlGKBGr6tby2U6UW4xsRCZeQfqWhNSc3OQE';
 
     public function testreg(Request $request) {
         $http = new Client([ 'base_uri' => 'http://events.api/','timeout' => 0]);
@@ -23,8 +21,8 @@ class AuthController extends Controller
                 'grant_type' => self::$grant_type,
                 'username' => 'george@george323322.george',
                 'password'=> '123123123',
-                'client_id' => self::$client_id,
-                'client_secret' => self::$client_secret,
+                'client_id' => config('passport.client_id'),
+                'client_secret' => config('passport.client_secret'),
                 'scope' => '',
             ],
         ]);    
@@ -56,8 +54,8 @@ class AuthController extends Controller
                 'grant_type' => self::$grant_type,
                 'username' => request()->email,
                 'password'=> request()->password,
-                'client_id' => self::$client_id,
-                'client_secret' => self::$client_secret,
+                'client_id' => config('passport.client_id'),
+                'client_secret' => config('passport.client_secret'),
                 'scope' => '',
             ],
         ]); 
@@ -77,8 +75,8 @@ class AuthController extends Controller
 
         $request->request->add([
             'grant_type' => self::$grant_type,
-            'client_id' => self::$client_id,
-            'client_secret' => self::$client_secret,
+                'client_id' => config('passport.client_id'),
+                'client_secret' => config('passport.client_secret'),
             'scope' => '',
         ]);
       

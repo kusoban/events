@@ -21,8 +21,8 @@ class Event extends JsonResource
             'creator_email' => $this->creator_email,
             'name' => $this->name,
             'description' => $this->description,
-            'categories' => $this->categories()->get()->pluck('name'),
-            'tags' => $this->tags()->get()->pluck('name') 
+            'categories' => $this->categories()->get()->map(function($category){ return ['id' => $category->id, 'name' => $category->name];}),
+            'tags' => $this->tags()->get()->map(function($tag){ return ['id' => $tag->id, 'name' => $tag->name];}) 
         ];
 
     }

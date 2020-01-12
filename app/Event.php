@@ -3,12 +3,15 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 use App\Category;
 use App\Tag;
 
 class Event extends Model
 {
+    use Searchable;
+    
     protected $fillable = ['name', 'description', 'image', 'creator_id', 'creator_email'];
 
     public function user() {
