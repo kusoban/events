@@ -5,6 +5,7 @@ import Login from '../views/auth/Login'
 import Register from '../views/auth/Register'
 import Events from '../views/events/Events'
 import CreateEvent from '../views/events/Create'
+import SingleEvent from '../views/events/SingleEvent'
 
 Vue.use(VueRouter)
 
@@ -13,6 +14,11 @@ const routes = [
     path: '/',
     name: 'home',
     component: Events
+  },
+  {
+    path: '/event/:id',
+    name: 'show-event',
+    component: SingleEvent
   },
   {
     path: '/login',

@@ -12,7 +12,9 @@
       height="200px"
     ></v-img>
   <v-card-title>
-{{event.name}}
+  <router-link :to="`/event/${event.id}`">
+    {{event.name}}
+  </router-link>
   </v-card-title>
 
     <v-card-text>
