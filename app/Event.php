@@ -12,7 +12,7 @@ class Event extends Model
 {
     use Searchable;
     
-    protected $fillable = ['name', 'description', 'image', 'creator_id', 'creator_email'];
+    protected $fillable = ['name', 'description', 'image', 'creator_id', 'creator_email', 'starts_at'];
 
     public function user() {
         return $this->belongsTo(User::class);

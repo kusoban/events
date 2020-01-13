@@ -14,24 +14,25 @@ class AuthController extends Controller
 {
     private static $grant_type = 'password';
 
-    public function testreg(Request $request) {
-        $http = new Client([ 'base_uri' => 'http://events.api/','timeout' => 0]);
+    public function testreg(Request $request)
+    {
+        $http = new Client(['base_uri' => 'http://events.api/', 'timeout' => 0]);
         $response = $http->post('/oauth/token', [
             'form_params' => [
                 'grant_type' => self::$grant_type,
                 'username' => 'george@george323322.george',
-                'password'=> '123123123',
+                'password' => '123123123',
                 'client_id' => config('passport.client_id'),
                 'client_secret' => config('passport.client_secret'),
                 'scope' => '',
             ],
-        ]);    
+        ]);
         return $response;
-}
+    }
 
-    public function register(Request $request) {
+    public function register(Request $request)
+    {
         $rules = [
-            'name' => 'required',
             'email' => "required|email|unique:users",
             'password' => 'required|min:6|confirmed',
         ];
@@ -40,25 +41,25 @@ class AuthController extends Controller
 
         $user = User::create([
             'email' => request('email'),
-            'name' => request('name'),
+            'name' => request('name') ?? 'John Doe',
             'password' => bcrypt($request->password),
             'verified' => User::UNVERIFIED_USER,
             'verification_token' => User::generateVerificationCode(),
             'admin' => User::REGULAR_USER,
         ]);
 
-        $http = new Client([ 'base_uri' => 'http://events.api/','timeout' => 0]);
-        
+        $http = new Client(['base_uri' => 'http://events.api/', 'timeout' => 0]);
+
         $tokenResponse = $http->post('/oauth/token', [
             'form_params' => [
                 'grant_type' => self::$grant_type,
                 'username' => request()->email,
-                'password'=> request()->password,
+                'password' => request()->password,
                 'client_id' => config('passport.client_id'),
                 'client_secret' => config('passport.client_secret'),
                 'scope' => '',
             ],
-        ]); 
+        ]);
 
         return response()->json([
             'user' => new UserResource($user),
@@ -66,28 +67,38 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         $auth = auth()->attempt(['email' => request()->email, 'password' => request()->password]);
-        
-        if(!$auth) {
+
+        if (!$auth) {
             return response('Unauthenticated', 403);
         }
 
-        $request->request->add([
-            'grant_type' => self::$grant_type,
+        $http = new Client(['base_uri' => 'http://events.api/', 'timeout' => 0]);
+
+        $tokenResponse = $http->post('/oauth/token', [
+            'form_params' => [
+                'grant_type' => self::$grant_type,
+                'username' => request()->email,
+                'password' => request()->password,
                 'client_id' => config('passport.client_id'),
                 'client_secret' => config('passport.client_secret'),
-            'scope' => '',
+                'scope' => '',
+            ],
         ]);
-      
-        $tokenRequest = Request::create('/oauth/token', 'POST');
-        $result = json_decode(Route::dispatch($tokenRequest)->getContent());
-        $result->email = auth()->user()->email;
 
-        return response()->json($result, 200);
+        return response()->json(
+            [
+                'user' => new UserResource(auth()->user()),
+                'token_data' => json_decode((string) $tokenResponse->getBody(), true)
+            ],
+            200
+        );
     }
 
-    public function getAuthenticatedUser () {
+    public function getAuthenticatedUser()
+    {
         $user = auth()->user();
         return new UserResource($user);
     }

@@ -20,7 +20,7 @@ class CreateEventsTable extends Migration
             $table->string('image')->nullable();
             $table->string('creator_email');
             $table->timestamps();
-            
+            $table->dateTime('starts_at');
             $table->bigInteger('creator_id')->unsigned();
             $table->foreign('creator_id')->references('id')->on('users');
         });

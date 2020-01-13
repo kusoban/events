@@ -38,8 +38,11 @@ class EventController extends Controller
         
         request()->validate([
             'name' => 'required|min:2',
-            'description' => 'required|min:5'
+            'description' => 'required|min:5',
+            'starts_at' => 'date_format:Y-d-m H:m'
         ]);
+
+        return 'kek';
 
         $event = request()->all();
         $event['creator_id'] = $user->id;

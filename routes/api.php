@@ -19,6 +19,10 @@ use App\Event;
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
+Route::get('/', function() {
+    return 'kek';
+})->middleware('cors');
+
 Route::post('/register', 'Api\AuthController@register');
 Route::post('/test', 'Api\AuthController@test');
 Route::post('/login', 'Api\AuthController@login');
@@ -35,11 +39,11 @@ Route::group(['prefix' => 'users'], function(){
     Route::post('/', 'Api\UserController@store');
 });
 
-Route::group(['prefix' => 'events'], function(){
+Route::group(['prefix' => 'events', 'middleware' => ['auth:api']], function(){
     Route::get('/', 'Api\EventController@index');
     Route::get('/filter', 'Api\EventController@filter');
     Route::get('/{event}', [ 'as' => 'show-event', 'uses' => 'Api\EventController@show']);
-    Route::post('/', 'Api\EventController@store')->middleware('auth:api');
+    Route::post('/', 'Api\EventController@store');
     Route::put('/{event}', 'Api\EventController@update')->middleware('auth:api');
     Route::delete('/{event}', 'Api\EventController@destroy')->middleware('auth:api');
 });
