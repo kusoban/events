@@ -39,13 +39,13 @@ Route::group(['prefix' => 'users'], function(){
     Route::post('/', 'Api\UserController@store');
 });
 
-Route::group(['prefix' => 'events', 'middleware' => ['auth:api']], function(){
+Route::group(['prefix' => 'events'], function(){
     Route::get('/', 'Api\EventController@index');
-    Route::get('/filter', 'Api\EventController@filter');
     Route::get('/{event}', [ 'as' => 'show-event', 'uses' => 'Api\EventController@show']);
-    Route::post('/', 'Api\EventController@store');
+    Route::post('/', 'Api\EventController@store')->middleware('auth:api');
     Route::put('/{event}', 'Api\EventController@update')->middleware('auth:api');
     Route::delete('/{event}', 'Api\EventController@destroy')->middleware('auth:api');
+    Route::get('/filter', 'Api\EventController@filter');
 });
 
 Route::group(['prefix' => 'categories'], function() {

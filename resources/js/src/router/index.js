@@ -1,12 +1,19 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import CreateEvent from '../views/event/Create'
 import Login from '../views/auth/Login'
 import Register from '../views/auth/Register'
+import Events from '../views/events/Events'
+import CreateEvent from '../views/events/Create'
+
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '/',
+    name: 'home',
+    component: Events
+  },
   {
     path: '/login',
     name: 'login',

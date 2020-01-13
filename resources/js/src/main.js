@@ -15,6 +15,11 @@ const axiosApi = axios.create({
   },
   baseURL: 'http://events.api/api',
 })
+
+axiosApi.interceptors.response.use(function (response) {
+    return response.data;
+})
+
 Vue.prototype.$api = axiosApi;
 
 Vue.config.productionTip = false
