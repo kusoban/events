@@ -27,15 +27,15 @@ class Event extends Model
     }
 
     public function addCategories($categories) {
-        foreach ($categories as $categoryName) {
-                $foundCategory = Category::where('name', $categoryName)->first();
+        foreach ($categories as $categoryId) {
+                $foundCategory = Category::find($categoryId);
                 
                 if($foundCategory) {
                     $this->categories()->attach($foundCategory);
                     continue;
                 }
 
-                $this->categories()->attach(Category::create(['name' => $categoryName]));
+                // $this->categories()->attach(Category::create(['name' => $categoryName]));
         }
     }
 

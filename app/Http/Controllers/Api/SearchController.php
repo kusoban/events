@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Event;
 use App\Category;
 use App\Tag;
-use App\Http\Resources\CategoryEvents as CategoryEventsResource;
+use App\Http\Resources\Event as EventResource;
 
 class SearchController extends Controller
 {
@@ -45,6 +45,7 @@ class SearchController extends Controller
 
     public function category() {
         $category = Category::where('name', request()->name)->first();
-        return new CategoryEventsResource($category);
+        $events = $category->events;
+        return EventResource::collection($events);
     }
 }

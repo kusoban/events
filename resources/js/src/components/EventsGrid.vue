@@ -1,11 +1,11 @@
 <template>
-      <v-row class="d-flex justify-center">
-      <div v-if="!events.length" class="pa-2" v-for="x in Array(12)">
+      <v-row class="d-flex justify-between">
+      <v-flex xs12 sm6 md6 lg4 v-if="!events.length" class="pa-2" v-for="x in Array(12)">
         <v-skeleton-loader width="355px" type="article"></v-skeleton-loader>
-      </div>
-      <div class="pa-2" v-for="event in events">
-        <EventCard  :event="event"></EventCard>
-      </div>
+      </v-flex>
+        <v-flex xs12 sm6 md6 lg4 class="pa-2" v-for="event in events">
+            <EventCard  :event="event"></EventCard>
+        </v-flex>
     </v-row>
 </template>
 

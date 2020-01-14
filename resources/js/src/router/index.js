@@ -10,6 +10,8 @@ import Events from '../views/events/Events'
 import CreateEvent from '../views/events/Create'
 import SingleEvent from '../views/events/SingleEvent'
 import EventsSearchResults from '../views/events/SearchResults';
+import CategoryEvents from '../views/events/CategoryEvents';
+
 Vue.use(VueRouter)
 function requireAuth (to, from, next) {
   if(!store.getters.userIsLoggedIn) return next('/login');
@@ -37,7 +39,11 @@ const routes = [
     path: '/events/search-results',
     name: 'events-search-results',
     component: EventsSearchResults,
-    props: true,
+  },
+  {
+    path: '/events/category/:name',
+    name: 'category-events',
+    component: CategoryEvents,
   },
   {
     path: '/login',

@@ -7,15 +7,21 @@
     >
       <!-- <v-app-bar-nav-icon @click="drawer = !drawer" /> -->
       <router-link to="/"><span class="title ml-3 mr-5" to="/">Events</span></router-link>
+      <div class="">
+
       <v-text-field
+        
         solo-inverted
         flat
         hide-details
         label="Search"
         prepend-inner-icon="search"
         v-model="searchText"
+        @keypress.enter="search"
+        ref="searchInput"
       />
-      <v-btn large text @click="search">Search</v-btn>
+      </div>
+      <v-btn large text  @click="search">Search</v-btn>
 
       <v-spacer />
       <v-btn v-if="this.$route.name !== 'login' && !this.$store.getters.userIsLoggedIn" to="/login">Login</v-btn>
@@ -53,6 +59,7 @@ import { mapGetters } from 'vuex';
         this.$router.replace('/')
       },
       search() {
+        if(!this.searchText.length) return this.$refs.searchInput.focus();
         this.$store.commit('setSearchText', {searchText: this.searchText});
         if(this.$route.name == 'events-search-results') {
           return;

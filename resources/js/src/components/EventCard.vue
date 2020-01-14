@@ -1,6 +1,6 @@
 <template>
     <v-card 
-    width="355px"
+    width="100%"
     class="mx-auto text-left"
     outlined
   >
@@ -11,9 +11,12 @@
   </v-card-title>
 
     <v-card-text>
-    {{event.description}}
+    <p>
+      {{event.description}}
+    </p>
     </v-card-text>
     <v-card-actions>
+      <v-chip class="ml-1" v-for="category in event.categories" @click="goToCategoryPage(category.name)">{{category.name}}</v-chip>
     </v-card-actions>
   </v-card>
 </template>
@@ -23,6 +26,11 @@ export default {
     name: 'EventCard',
     props: {
         event,
+    },
+    methods: {
+      goToCategoryPage(name) {
+        this.$router.push(`/events/category/${name}`)
+      }
     }
 }
 </script>

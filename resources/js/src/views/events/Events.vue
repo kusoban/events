@@ -14,10 +14,7 @@ export default {
     },
     mounted() {
         this.$api.get('/events/').then(response => {
-          console.log(response)
-          setTimeout(() => {
             this.events = response.data;
-          }, 1500)
         })
     },
     data() {
