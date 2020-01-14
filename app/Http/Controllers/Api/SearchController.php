@@ -11,6 +11,15 @@ use App\Http\Resources\CategoryEvents as CategoryEventsResource;
 
 class SearchController extends Controller
 {
+    public function index() {
+        $stext = request('search_text');
+        return Event::where( function ( $q2 ) use ( $stext ) {
+            $q2->whereRaw( 'LOWER(`name`) like ?', array( '%' . strtolower($stext) . '%' ) );
+            $q2->orWhereRaw( 'LOWER(`description`) like ?', array( '%' . strtolower($stext) . '%' ) );
+        })->paginate(16);
+        
+    }
+
     public function filter() {
         if(request()->has('category') && !empty(request()->category)) {
             $events = Event::whereHas('categories', function($q) {

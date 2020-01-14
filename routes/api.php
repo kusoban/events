@@ -31,6 +31,7 @@ Route::middleware('auth:api')->post('/reset-password', 'Api\AuthController@reset
 Route::middleware('auth:api')->post('me', 'Api\AuthController@getAuthenticatedUser');
 
 Route::group(['prefix' => 'search'], function(){
+    Route::get('/', 'Api\SearchController@index');
     Route::get('/category', 'Api\SearchController@category');
 });
 

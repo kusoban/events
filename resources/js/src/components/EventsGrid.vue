@@ -1,0 +1,26 @@
+<template>
+      <v-row class="d-flex justify-center">
+      <div v-if="!events.length" class="pa-2" v-for="x in Array(12)">
+        <v-skeleton-loader width="355px" type="article"></v-skeleton-loader>
+      </div>
+      <div class="pa-2" v-for="event in events">
+        <EventCard  :event="event"></EventCard>
+      </div>
+    </v-row>
+</template>
+
+<script>
+import EventCard from './EventCard';
+
+export default {
+    props: ['events'],
+    components: {
+        'EventCard': EventCard,
+    },
+    name: 'EventsGrid',
+}
+</script>
+
+<style>
+
+</style>

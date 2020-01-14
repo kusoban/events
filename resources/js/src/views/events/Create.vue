@@ -26,7 +26,7 @@
                         <v-datetime-picker label="Select Datetime" v-model="eventToCreate.dateTime"></v-datetime-picker>
                     </v-col>
                 </v-row>
-                <v-btn :disabled="!eventToCreate.dateTime || !valid"  @click="create">Create</v-btn>
+                <v-btn :disabled="!eventToCreate.dateTime || !valid" @click="create">Create</v-btn>
             </v-container>
         </v-form>
     </v-flex>
@@ -38,15 +38,16 @@ export default {
     name: "CreateEvent",
     data() {
         return {
-            
             valid: false,
             nameRules: [
-                v => !!v || 'Name is required',
-                v => v.length >= 3 || 'Name must be at least 3 characters',
+                v => !!v || "Name is required",
+                v => v.length >= 3 || "Name must be at least 3 characters"
             ],
             descriptionRules: [
-                v => !!v || 'Description is required',
-                v => v.length >= 10 || 'Description must be at least 10 characters',
+                v => !!v || "Description is required",
+                v =>
+                    v.length >= 10 ||
+                    "Description must be at least 10 characters"
             ],
             eventToCreate: {
                 name: "",
@@ -58,11 +59,20 @@ export default {
 
     methods: {
         create() {
-            if(!this.eventToCreate.dateTime) this.valid = false;
-
-            this.$api.get('/events/', data => {
-                console.log(data);
-            });
+            this.$api.post(
+                "/events",
+                {
+                    name: this.eventToCreate.name,
+                    description: this.eventToCreate.description,
+                    starts_at: this.eventToCreate.dateTime
+                },
+                {
+                    headers: {
+                        'Authorization': 'Bearer ' + this.$store.getters.user.accessToken
+                    }
+                }).then(response => {
+                    this.$router.push(`/event/${response.data.id}`)
+                })
         }
     }
 };

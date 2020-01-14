@@ -22,6 +22,7 @@ $factory->define(Event::class, function (Faker $faker) {
     return [
         'name' => $faker->word,
         'description' => $faker->paragraph(1),
+        'starts_at' => $faker->dateTimeThisMonth(),
         'image' => $faker->randomElement(['1.png', '2.jpg', '3.jpg']),
         'creator_id' => $user->id,
         'creator_email' => $user->email

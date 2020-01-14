@@ -1,41 +1,24 @@
 <template>
-  <v-row>
-    <v-flex lg3 v-for="event in events">
-
-  <v-card 
-    class="mx-auto text-left"
-    max-width="344"
-    outlined
-  >
-   <v-img
-      src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
-      height="200px"
-    ></v-img>
-  <v-card-title>
-  <router-link :to="`/event/${event.id}`">
-    {{event.name}}
-  </router-link>
-  </v-card-title>
-
-    <v-card-text>
-    {{event.description}}
-    </v-card-text>
-    <v-card-actions>
-    </v-card-actions>
-  </v-card>
-    </v-flex>
-
-  </v-row>
+  <v-container fluid> 
+      <h1 class="text-center">Today</h1>
+      <EventsGrid :events="events"></EventsGrid>
+  </v-container>
 </template>
 
 <script>
+import EventsGrid from '../../components/EventsGrid';
 export default {
     name: 'Events',
+    components: {
+      EventsGrid,
+    },
     mounted() {
-      this.$api.get('/events/').then(response => {
-        console.log(response)
-        this.events = response.data;
-      })
+        this.$api.get('/events/').then(response => {
+          console.log(response)
+          setTimeout(() => {
+            this.events = response.data;
+          }, 1500)
+        })
     },
     data() {
       return {

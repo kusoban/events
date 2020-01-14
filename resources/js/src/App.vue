@@ -13,18 +13,19 @@
         hide-details
         label="Search"
         prepend-inner-icon="search"
+        v-model="searchText"
       />
+      <v-btn large text @click="search">Search</v-btn>
 
       <v-spacer />
       <v-btn v-if="this.$route.name !== 'login' && !this.$store.getters.userIsLoggedIn" to="/login">Login</v-btn>
       <v-btn v-if="this.$route.name !== 'register' && !this.$store.getters.userIsLoggedIn" class="ml-3" to="/register">Register</v-btn>
-      <v-btn v-if="this.$store.getters.userIsLoggedIn" class="ml-3" @click="$store.commit('logout')">Logout</v-btn>
+      <v-btn v-if="this.$store.getters.userIsLoggedIn" class="ml-3" @click="logout">Logout</v-btn>
     </v-app-bar>
 
 
     <v-content>
       <v-container
-        text-center
         fluid
         class="grey lighten-4 fill-height"
       >
@@ -44,7 +45,21 @@ import { mapGetters } from 'vuex';
       ...mapGetters(['userIsLoggedIn']),
     },
     data: () => ({
+      searchText: '',
     }),
+    methods: {
+      logout() {
+        this.$store.commit('logout');
+        this.$router.replace('/')
+      },
+      search() {
+        this.$store.commit('setSearchText', {searchText: this.searchText});
+        if(this.$route.name == 'events-search-results') {
+          return;
+        } 
+        this.$router.push({name: 'events-search-results'});
+      }
+    }
   }
 </script>
 

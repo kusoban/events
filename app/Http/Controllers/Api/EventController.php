@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 use App\Http\Resources\Event as EventResource;
 use App\Http\Resources\Category as CategoryResource;
+use Illuminate\Support\Carbon;
 
 class EventController extends Controller
 {
@@ -21,8 +22,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = Event::paginate(10);
-
+        $events = Event::whereDate('starts_at', Carbon::today())->latest()->paginate(10);
         return EventResource::collection($events);
     }
 
@@ -34,17 +34,19 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        $user = auth()->user();
-        
         request()->validate([
             'name' => 'required|min:2',
             'description' => 'required|min:5',
-            'starts_at' => 'date_format:Y-d-m H:m'
+            'starts_at' => 'date'
         ]);
 
-        return 'kek';
-
-        $event = request()->all();
+        $user = auth()->user();
+        $event = [
+            'name' => request('name'),
+            'description' => request('description'),
+            'starts_at' => date('Y-m-d H:i:s', strtotime(request('starts_at')))
+        ];
+        // $events['starts_at'] = date('Y-m-d H:i:s', strtotime(request('starts_at')));
         $event['creator_id'] = $user->id;
         $event['creator_email'] = $user->email;
 

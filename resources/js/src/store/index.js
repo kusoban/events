@@ -20,7 +20,8 @@ const store = new Vuex.Store({
             id: null,
             email: '',
             accessToken: '',
-        }
+        },
+        globalSearchText: '',
     },
     mutations: {
         logout (state) {
@@ -28,6 +29,9 @@ const store = new Vuex.Store({
         },
         setUser (state, user) {
             state.user = user;
+        },
+        setSearchText(state, payload) {
+            state.globalSearchText = payload.searchText;
         }
     },
 
@@ -50,17 +54,20 @@ const store = new Vuex.Store({
                 .catch(err => {
                     console.error(err.response.data.errors);
                 });
-        }
+        },
     },
     getters: {
         userIsLoggedIn(state) {
             return !!state.user.id;
         },
-        count (state) {
-            return 'state count is ' + state.count;
+        user(state) {
+            return state.user;
         },
         test () {
             return 'kek'
+        },
+        globalSearchText(state) {
+            return state.globalSearchText
         }
     }
 })
