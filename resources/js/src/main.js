@@ -8,17 +8,7 @@ import './plugins/dateTime';
 
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
-import axios from 'axios';
-const axiosApi = axios.create({
-  headers: {
-    'Access-Control-Allow-Origin': '*',
-  },
-  baseURL: 'http://events.api/api',
-})
-
-axiosApi.interceptors.response.use(function (response) {
-    return response.data;
-})
+import axiosApi from './axios/api';
 
 Vue.prototype.$api = axiosApi;
 

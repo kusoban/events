@@ -9,13 +9,39 @@ import Register from '../views/auth/Register'
 import Events from '../views/events/Events'
 import CreateEvent from '../views/events/Create'
 import SingleEvent from '../views/events/SingleEvent'
-import EventsSearchResults from '../views/events/SearchResults';
-import CategoryEvents from '../views/events/CategoryEvents';
+import EventsSearchResults from '../views/events/SearchResults'
+import CategoryEvents from '../views/events/CategoryEvents'
+import FavoriteEvents from '../views/events/FavoriteEvents'
+import RegisteredToEvents from '../views/events/RegisteredToEvents'
+
+import axios from '../axios/api'
 
 Vue.use(VueRouter)
 function requireAuth (to, from, next) {
-  if(!store.getters.userIsLoggedIn) return next('/login');
-  return next();
+    let token = store.getters.user.accessToken;
+    console.log(token)
+    if(!token) return next('/login')
+
+    if(store.getters.userIsLoggedIn) return next();
+
+    axios.get('/me', {
+      headers: {
+        'Authorization': 'Bearer ' + token 
+      }
+    }).then(({data: {id, name, email}}) => {
+      store.commit('setUser', {id, name, email, accessToken: token} )
+      next();
+    }).catch(err => {
+      console.log('errr in me response', err.response)
+      return next('/login')
+    })
+
+  // return next();
+}
+
+function skipIfLoggedIn(to, from, next) {
+  // if(!store.getters.user.accessToken) return next('/login')
+  return next()
 }
 
 const routes = [
@@ -41,19 +67,33 @@ const routes = [
     component: EventsSearchResults,
   },
   {
-    path: '/events/category/:name',
+    path: '/events/category/:category',
     name: 'category-events',
     component: CategoryEvents,
+  },
+  {
+    path: '/events/favorites',
+    name: 'favorite-events',
+    beforeEnter: requireAuth,
+    component: FavoriteEvents,
+  },
+  {
+    path: '/events/registered',
+    name: 'registered-to-events',
+    beforeEnter: requireAuth,
+    component: RegisteredToEvents,
   },
   {
     path: '/login',
     name: 'login',
     component: Login,
+    beforeEnter: skipIfLoggedIn
   },
   {
     path: '/register',
     name: 'register',
     component: Register,
+    beforeEnter: skipIfLoggedIn
   },
   {
     path: '/about',

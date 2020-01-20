@@ -8,6 +8,7 @@
   <router-link :to="`/event/${event.id}`">
     {{event.name}}
   </router-link>
+  {{event.id}}
   </v-card-title>
 
     <v-card-text>
@@ -24,12 +25,13 @@
 <script>
 export default {
     name: 'EventCard',
-    props: {
-        event,
-    },
+    props: [
+      'event',
+    ],
     methods: {
       goToCategoryPage(name) {
-        this.$router.push(`/events/category/${name}`)
+        if (this.$route.params.category == name) return;
+        this.$router.push(`/events/category/${name}`);
       }
     }
 }

@@ -53,6 +53,14 @@ class User extends Authenticatable
         return $this->hasMany(Event::class);
     }
 
+    public function favoriteEvents() {
+        return $this->belongsToMany(Event::class, 'favorite_event_user');
+    }
+
+    public function registeredToEvents() {
+        return $this->belongsToMany(Event::class, 'registered_event_user');
+    }
+
     public function isVerified() {
         return $this->verified == User::VERIFIED_USER;
     }

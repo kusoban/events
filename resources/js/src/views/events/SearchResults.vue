@@ -1,35 +1,55 @@
 <template>
   <v-container fluid>
-      <h1>What we've found:</h1>
-      <EventsGrid :events="events"></EventsGrid>
+      <h1>{{ loaded ? (events.length ? 'What we have found:' : 'Nothing found :(') : 'Loading...'}}</h1>
+      <EventsGrid :loaded="loaded" :events="events"></EventsGrid>
+      <v-pagination
+      v-if="search.length > 1"
+      v-model="search.page"
+      :length="search.length"
+      @input="changePage"
+    ></v-pagination>
   </v-container>
 </template>
 
 <script>
 import EventsGrid from '../../components/EventsGrid';
 export default {
-    props: ['searchText'],
+    name: 'SearchResults',
     components: {
         'EventsGrid': EventsGrid,
     },
     data() {
         return {
+            search: {
+                length: 1,
+                page: 1,
+                nextUrl: '',
+                prevUrl: '',
+            },
+            loaded: false,
             events: []
         }
     },
-    mounted() {
-        this.loadSearchResults();
-    },
     methods: {
-        loadSearchResults() {
-            this.$api.get('/search', {
+        changePage(page) {
+            this.loadSearchResults(page);
+        },
+        loadSearchResults(page) {
+            console.log('gst:', this.globalSearchText)
+             this.$api.get('/search', {
                 params: {
                     'search_text': this.globalSearchText,
+                    page: page || 1,
                 }
             }).then(response => {
                 this.events = response.data;
+                this.search.length = response.last_page;
+                this.search.nextUrl = response.next_page_url;
+                this.search.prevUrl = response.prev_page_url;
+
+                this.loaded = true;
             })
-        }
+            }
     },
     computed: {
         globalSearchText() {
@@ -39,16 +59,8 @@ export default {
     watch: {
         globalSearchText: {
             immediate: true,
-            handler: function(val, oldVal) {
-                this.$api.get('/search', {
-                params: {
-                    'search_text': this.globalSearchText,
-                }
-                }).then(response => {
-                    this.events = response.data;
-                }).catch(err => {
-                    console.log(err.response)
-                })
+            handler : function () {
+                this.loadSearchResults();
             }
         }
     }

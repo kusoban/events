@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 // use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\DB;
 use App\Event;
+use GuzzleHttp\Middleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,21 +20,15 @@ use App\Event;
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-Route::get('/', function() {
-    return 'kek';
-})->middleware('cors');
+Route::post('/test', 'Api\MapController@test');
 
 Route::post('/register', 'Api\AuthController@register');
-Route::post('/test', 'Api\AuthController@test');
 Route::post('/login', 'Api\AuthController@login');
 Route::middleware('auth:api')->post('/reset-password', 'Api\AuthController@resetPassword');
 
-Route::middleware('auth:api')->post('me', 'Api\AuthController@getAuthenticatedUser');
+Route::middleware('auth:api')->get('me', 'Api\AuthController@getAuthenticatedUser');
 
-Route::group(['prefix' => 'search'], function(){
-    Route::get('/', 'Api\SearchController@index');
-    Route::get('/category', 'Api\SearchController@category');
-});
+
 
 Route::group(['prefix' => 'users'], function(){
     Route::get('/', 'Api\UserController@index');
@@ -41,12 +36,20 @@ Route::group(['prefix' => 'users'], function(){
 });
 
 Route::group(['prefix' => 'events'], function(){
+    // Route::get('/filter', 'Api\EventController@filter');
+   
     Route::get('/', 'Api\EventController@index');
-    Route::get('/{event}', [ 'as' => 'show-event', 'uses' => 'Api\EventController@show']);
     Route::post('/', 'Api\EventController@store')->middleware('auth:api');
+   
+    Route::post('/register', 'Api\EventController@toggleRegister')->middleware('auth:api');
+    Route::get('/registered', 'Api\EventController@getEventsUserIsRegisteredTo')->middleware('auth:api');
+   
+    Route::post('/favorites', 'Api\EventController@toggleFavorite')->middleware('auth:api');
+    Route::get('/favorites', 'Api\EventController@getFavoriteEvents')->middleware('auth:api');
+   
+    Route::get('/{event}', [ 'as' => 'show-event', 'uses' => 'Api\EventController@show']);
     Route::put('/{event}', 'Api\EventController@update')->middleware('auth:api');
     Route::delete('/{event}', 'Api\EventController@destroy')->middleware('auth:api');
-    Route::get('/filter', 'Api\EventController@filter');
 });
 
 Route::group(['prefix' => 'categories'], function() {
@@ -55,4 +58,9 @@ Route::group(['prefix' => 'categories'], function() {
     Route::get('/{category}', 'Api\CategoryController@show');
     Route::put('/{category}', 'Api\CategoryController@update')->middleware('auth:api');
     Route::delete('/{category}', 'Api\CategoryController@destroy');
+});
+
+Route::group(['prefix' => 'search'], function(){
+    Route::get('/', 'Api\SearchController@index');
+    Route::get('/category', 'Api\SearchController@category');
 });

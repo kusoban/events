@@ -6,6 +6,7 @@ use App\Category;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\Category as CategoryResource;
+use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
 
 class CategoryController extends Controller
 {
@@ -35,9 +36,13 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        //
+        request()->validate([
+            'name' => 'required|min:2',
+        ]);
+
+        return new CategoryResource(Category::create(['name' => request('name')]));
     }
 
     /**

@@ -22,7 +22,8 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = Event::whereDate('starts_at', Carbon::today())->latest()->paginate(10);
+        auth()->shouldUse('api');
+        $events = Event::whereDate('starts_at', '>=', Carbon::today())->orderBy('starts_at', 'asc')->paginate(16);
         return EventResource::collection($events);
     }
 
@@ -41,12 +42,13 @@ class EventController extends Controller
         ]);
 
         $user = auth()->user();
+
         $event = [
             'name' => request('name'),
             'description' => request('description'),
             'starts_at' => date('Y-m-d H:i:s', strtotime(request('starts_at')))
         ];
-        // $events['starts_at'] = date('Y-m-d H:i:s', strtotime(request('starts_at')));
+
         $event['creator_id'] = $user->id;
         $event['creator_email'] = $user->email;
 
@@ -56,6 +58,7 @@ class EventController extends Controller
             $event->addCategories(request()->categories);
             
         }
+
         if(request()->tags) {
             $event->addTags(request()->tags);
         }
@@ -72,6 +75,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
+        auth()->shouldUse('api');
         return new EventResource($event);
     }
 
@@ -103,6 +107,47 @@ class EventController extends Controller
     {
         $event->delete();
         return response('success', 200);
+    }
+
+    public function toggleRegister() {
+        $user = auth()->user();
+        $eventId = request('eventId');
+        $event = Event::find($eventId);
+
+        if(!$event) return response()->json('not found', 404);
+
+        $user->registeredToEvents()->toggle($event);
+
+        return response(['result' => 'success'], 200);
+    }
+
+    public function toggleFavorite() {
+        $user = auth()->user();
+        $eventId = request('eventId');
+        $event = Event::find($eventId);
+
+        if(!$event) return response()->json('not found', 404);
+
+        $user->favoriteEvents()->toggle($event->id);
+
+        return response(['result' => 'success'], 200);
+    }
+
+    public function getEventsUserIsRegisteredTo() {
+        $user = auth()->user();
+        $events = $user->registeredToEvents()->get();
+        if(!$events) {
+            return response()->json('nothing found', 404);
+        }
+
+        return response()->json($events, 200);
+    }
+
+    public function getFavoriteEvents() {
+        $user = auth()->user();
+        $events = $user->favoriteEvents()->get();
+
+        return response()->json($events, 200);
     }
 
 }

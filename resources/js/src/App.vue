@@ -5,8 +5,9 @@
       clipped-left
       color="white"
     >
-      <!-- <v-app-bar-nav-icon @click="drawer = !drawer" /> -->
+      <v-app-bar-nav-icon @click="drawer = !drawer" />
       <router-link to="/"><span class="title ml-3 mr-5" to="/">Events</span></router-link>
+      <router-link to="/events/favorites"><span class="title ml-3 mr-5" to="/">Favorites</span></router-link>
       <div class="">
 
       <v-text-field
@@ -24,9 +25,10 @@
       <v-btn large text  @click="search">Search</v-btn>
 
       <v-spacer />
-      <v-btn v-if="this.$route.name !== 'login' && !this.$store.getters.userIsLoggedIn" to="/login">Login</v-btn>
-      <v-btn v-if="this.$route.name !== 'register' && !this.$store.getters.userIsLoggedIn" class="ml-3" to="/register">Register</v-btn>
-      <v-btn v-if="this.$store.getters.userIsLoggedIn" class="ml-3" @click="logout">Logout</v-btn>
+      <v-btn v-if="$route.name !== 'login' && !$store.getters.userIsLoggedIn" to="/login">Login</v-btn>
+      <v-btn v-if="$route.name !== 'register' && !$store.getters.userIsLoggedIn" class="ml-3" to="/register">Register</v-btn>
+      <v-btn v-if="$store.getters.userIsLoggedIn" class="ml-3" @click="logout">Logout</v-btn>
+      <v-btn @click="$store.commit('test')">Test</v-btn>
     </v-app-bar>
 
 
@@ -51,12 +53,18 @@ import { mapGetters } from 'vuex';
       ...mapGetters(['userIsLoggedIn']),
     },
     data: () => ({
+      drawer: false,
       searchText: '',
     }),
+    mounted(){
+      this.$store.commit('getUserFromLocalStorage');
+    },
     methods: {
       logout() {
         this.$store.commit('logout');
-        this.$router.replace('/')
+        if(this.$route.name !== 'home') {
+          this.$router.replace('/')
+        }
       },
       search() {
         if(!this.searchText.length) return this.$refs.searchInput.focus();

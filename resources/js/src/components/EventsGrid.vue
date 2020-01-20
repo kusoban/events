@@ -1,7 +1,7 @@
 <template>
       <v-row class="d-flex justify-between">
-      <v-flex xs12 sm6 md6 lg4 v-if="!events.length" class="pa-2" v-for="x in Array(12)">
-        <v-skeleton-loader width="355px" type="article"></v-skeleton-loader>
+      <v-flex xs12 sm6 md6 lg4 v-if="!loaded" class="pa-2" v-for="x in Array(12)">
+        <v-skeleton-loader width="" type="article"></v-skeleton-loader>
       </v-flex>
         <v-flex xs12 sm6 md6 lg4 class="pa-2" v-for="event in events">
             <EventCard  :event="event"></EventCard>
@@ -13,7 +13,7 @@
 import EventCard from './EventCard';
 
 export default {
-    props: ['events'],
+    props: ['events', 'loaded'],
     components: {
         'EventCard': EventCard,
     },

@@ -2,7 +2,7 @@
 <v-container>
        <v-skeleton-loader
             class="mx-auto"
-            width="555px"
+            max-width="555px"
             type="article, icons, actions"
             v-if="!event.id"
           ></v-skeleton-loader>
@@ -37,8 +37,8 @@
     </v-card-text>
     <v-card-actions>
         <v-spacer/>
-        <v-btn color="amber" text>Add to Favorites</v-btn>
-        <v-btn color="amber" text>Register</v-btn>
+        <v-btn :loading="loading.favorite" color="amber" text @click="toggleFavorite">{{event.isFavorite ? 'Remove from Favorites' : 'Add to favorites'}}</v-btn>
+        <v-btn :loading="loading.register"  color="amber" text @click="toggleRegister">{{event.isRegisteredTo ? 'Unregister' : 'Register'}}</v-btn>
     </v-card-actions>
   </v-card>
 
@@ -49,19 +49,21 @@
 import moment from 'moment';
 export default {
     mounted() {
-        setTimeout(
-          () => {
-            this.$api.get(`/events/${this.$route.params.id}`).then(response => {
-                this.event = (response.data)
-                // console.log(moment(response.data.starts_at, 'YYYY-MM-DD HH:mm:ss').fromNow());
-            })
-          },
-          1500
-        )
+        this.$api.get(`/events/${this.$route.params.id}`, {
+          headers: {
+            'Authorization': 'Bearer ' + this.$store.getters.user.accessToken,
+          }
+        }).then(response => {
+            this.event = (response.data)
+        })
     },
     data() {
         return {
             event: {},
+            loading: {
+              favorite: false,
+              register: false,
+            }
         }
     },
     methods: {
@@ -81,7 +83,47 @@ export default {
             const diff = moment(this.event.starts_at).diff(moment(), 'hours');
             if(diff < 0) return 'past';
             if (diff < 24 ) return 'soon';
-        }
+        },
+        toggleFavorite() {
+          this.$store.dispatch('authorize').then(() => {
+            this.loading.favorite = true;
+            this.$api.post('/events/favorites', {
+              'eventId': this.event.id
+            },
+            {
+              headers: {
+                'Authorization': 'Bearer ' + this.$store.getters.user.accessToken
+              }
+            }
+            ).then(response => {
+              this.event.isFavorite = !this.event.isFavorite
+              this.loading.favorite = false
+            })
+
+          }).catch(e => {
+
+          })
+        },
+        toggleRegister() {
+          this.$store.dispatch('authorize').then(() => {
+            console.log('success')
+            this.loading.register = true;
+            this.$api.post('/events/register', {
+              'eventId': this.event.id
+            },
+            {
+              headers: {
+                'Authorization': 'Bearer ' + this.$store.getters.user.accessToken
+              }
+            }
+            ).then(response => {
+              this.event.isRegisteredTo = !this.event.isRegisteredTo
+              this.loading.register = false ;
+            })
+          }).catch((err) => {
+            console.log('err:::', err)
+          })
+        },
     },
 }
 </script>

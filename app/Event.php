@@ -25,6 +25,14 @@ class Event extends Model
     public function categories() {
         return $this->belongsToMany(Category::class);
     }
+    
+    public function usersWhoFavorited() {
+        return $this->belongsToMany(User::class, 'favorite_event_user');
+    }
+    
+    public function usersWhoRegistered() {
+        return $this->belongsToMany(User::class, 'registered_event_user');
+    }
 
     public function addCategories($categories) {
         foreach ($categories as $categoryId) {

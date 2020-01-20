@@ -39,8 +39,7 @@
                     <v-col cols="12" md="4">
                         <v-text-field
                             v-model="tag"
-                            :rules="tagRules"
-                            label="Event Name"
+                            label="Tag name"
                             required
                         ></v-text-field>
                         <div class="">
@@ -101,10 +100,6 @@ export default {
                     v.length >= 10 ||
                     "Description must be at least 10 characters"
             ],
-            tagRules: [
-                v => !!v || "Tag is required",
-                v => v.length > 1 || "Tag should be at least 2 letters"
-            ],
             eventToCreate: {
                 name: "",
                 description: "",
@@ -130,9 +125,11 @@ export default {
                 })
         },
         addTag() {
+            if(!this.tag) return
             let tags = this.eventToCreate.tags;
             if (tags.includes(this.tag)) return;
             this.eventToCreate.tags.push(this.tag);
+            this.tag = ''
         },
         removeTag(tag) {
             this.eventToCreate.tags = this.eventToCreate.tags.filter(v => {

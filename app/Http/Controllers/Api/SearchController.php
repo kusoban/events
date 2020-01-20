@@ -16,8 +16,8 @@ class SearchController extends Controller
         return Event::where( function ( $q2 ) use ( $stext ) {
             $q2->whereRaw( 'LOWER(`name`) like ?', array( '%' . strtolower($stext) . '%' ) );
             $q2->orWhereRaw( 'LOWER(`description`) like ?', array( '%' . strtolower($stext) . '%' ) );
-        })->paginate(16);
-        
+        })->orderBy('starts_at', 'desc')->paginate(16)->appends(['search_text' => request('search_text') ?? '']);;
+
     }
 
     public function filter() {

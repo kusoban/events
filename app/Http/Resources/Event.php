@@ -14,7 +14,14 @@ class Event extends JsonResource
      */
     public function toArray($request)
     {
-        // return parent::toArray($request);
+        $user = auth()->user();
+        $isFavorite = false;
+        $isRegisteredTo = false;
+        if($user) {
+            $isFavorite = $this->usersWhoFavorited->contains($user->id);
+            $isRegisteredTo = $this->usersWhoRegistered->contains($user->id);
+        }
+
         return [
             'id' => $this->id,
             'creator_id' => $this->creator_id,
@@ -23,7 +30,9 @@ class Event extends JsonResource
             'starts_at' => $this->starts_at,
             'description' => $this->description,
             'categories' => $this->categories()->get()->map(function($category){ return ['id' => $category->id, 'name' => $category->name];}),
-            'tags' => $this->tags()->get()->map(function($tag){ return ['id' => $tag->id, 'name' => $tag->name];}) 
+            'tags' => $this->tags()->get()->map(function($tag){ return ['id' => $tag->id, 'name' => $tag->name];}),
+            'isFavorite' => $isFavorite,
+            'isRegisteredTo' => $isRegisteredTo
         ];
 
     }
