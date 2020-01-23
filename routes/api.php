@@ -60,7 +60,16 @@ Route::group(['prefix' => 'categories'], function() {
     Route::delete('/{category}', 'Api\CategoryController@destroy');
 });
 
+Route::group(['prefix' => 'tags'], function() {
+    Route::get('/', 'Api\TagController@index');
+    Route::post('/', 'Api\TagController@store')->middleware('auth:api');
+    Route::get('/{tag}', 'Api\TagController@show');
+    Route::put('/{tag}', 'Api\TagController@update')->middleware('auth:api');
+    Route::delete('/{tag}', 'Api\TagController@destroy');
+});
+
 Route::group(['prefix' => 'search'], function(){
     Route::get('/', 'Api\SearchController@index');
+    Route::get('/filter', 'Api\SearchController@filter');
     Route::get('/category', 'Api\SearchController@category');
 });

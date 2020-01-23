@@ -17,6 +17,7 @@ class Event extends JsonResource
         $user = auth()->user();
         $isFavorite = false;
         $isRegisteredTo = false;
+        
         if($user) {
             $isFavorite = $this->usersWhoFavorited->contains($user->id);
             $isRegisteredTo = $this->usersWhoRegistered->contains($user->id);

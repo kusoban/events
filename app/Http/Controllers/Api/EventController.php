@@ -18,12 +18,15 @@ class EventController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\
      */
     public function index()
     {
         auth()->shouldUse('api');
-        $events = Event::whereDate('starts_at', '>=', Carbon::today())->orderBy('starts_at', 'asc')->paginate(16);
+        $events = Event::whereDate('starts_at', '>=', Carbon::today())
+            ->orderBy('starts_at', 'asc')
+            ->with('tags')
+            ->paginate(16);
         return EventResource::collection($events);
     }
 
@@ -46,25 +49,25 @@ class EventController extends Controller
         $event = [
             'name' => request('name'),
             'description' => request('description'),
-            'starts_at' => date('Y-m-d H:i:s', strtotime(request('starts_at')))
+            'starts_at' => date('Y-m-d H:i:s', strtotime(request('starts_at'))),
+            'creator_id' => $user->id,
+            'creator_email' => $user->email
         ];
 
-        $event['creator_id'] = $user->id;
-        $event['creator_email'] = $user->email;
 
-        $event = Event::create( $event );
-      
-        if(request()->categories) {
-            $event->addCategories(request()->categories);
-            
+        $event = Event::create($event);
+        $categories = request('categories');
+        $tags = request('tags');
+
+        if ($categories) {
+            $event->addCategories($categories);
         }
 
-        if(request()->tags) {
-            $event->addTags(request()->tags);
+        if ($tags) {
+            $event->addTags($tags);
         }
 
         return new EventResource($event);
-
     }
 
     /**
@@ -88,7 +91,7 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-       request()->validate([
+        request()->validate([
             'name' => 'required|min:2',
             'description' => 'required|min:5'
         ]);
@@ -109,45 +112,48 @@ class EventController extends Controller
         return response('success', 200);
     }
 
-    public function toggleRegister() {
+    public function toggleRegister()
+    {
         $user = auth()->user();
         $eventId = request('eventId');
         $event = Event::find($eventId);
 
-        if(!$event) return response()->json('not found', 404);
+        if (!$event) return response()->json('not found', 404);
 
         $user->registeredToEvents()->toggle($event);
 
         return response(['result' => 'success'], 200);
     }
 
-    public function toggleFavorite() {
+    public function toggleFavorite()
+    {
         $user = auth()->user();
         $eventId = request('eventId');
         $event = Event::find($eventId);
 
-        if(!$event) return response()->json('not found', 404);
+        if (!$event) return response()->json('not found', 404);
 
         $user->favoriteEvents()->toggle($event->id);
 
         return response(['result' => 'success'], 200);
     }
 
-    public function getEventsUserIsRegisteredTo() {
+    public function getEventsUserIsRegisteredTo()
+    {
         $user = auth()->user();
         $events = $user->registeredToEvents()->get();
-        if(!$events) {
+        if (!$events) {
             return response()->json('nothing found', 404);
         }
 
         return response()->json($events, 200);
     }
 
-    public function getFavoriteEvents() {
+    public function getFavoriteEvents()
+    {
         $user = auth()->user();
         $events = $user->favoriteEvents()->get();
 
         return response()->json($events, 200);
     }
-
 }

@@ -1,7 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+Vue.use(VueRouter)
 
 import store from '../store/index.js';
+
+import axios from '../axios/api'
 
 import Home from '../views/Home.vue'
 import Login from '../views/auth/Login'
@@ -13,10 +16,10 @@ import EventsSearchResults from '../views/events/SearchResults'
 import CategoryEvents from '../views/events/CategoryEvents'
 import FavoriteEvents from '../views/events/FavoriteEvents'
 import RegisteredToEvents from '../views/events/RegisteredToEvents'
+import Search from '../views/events/Search'
 
-import axios from '../axios/api'
 
-Vue.use(VueRouter)
+
 function requireAuth (to, from, next) {
     let token = store.getters.user.accessToken;
     console.log(token)
@@ -39,10 +42,6 @@ function requireAuth (to, from, next) {
   // return next();
 }
 
-function skipIfLoggedIn(to, from, next) {
-  // if(!store.getters.user.accessToken) return next('/login')
-  return next()
-}
 
 const routes = [
   {
@@ -87,13 +86,16 @@ const routes = [
     path: '/login',
     name: 'login',
     component: Login,
-    beforeEnter: skipIfLoggedIn
   },
   {
     path: '/register',
     name: 'register',
     component: Register,
-    beforeEnter: skipIfLoggedIn
+  },
+  {
+    path: '/search',
+    name: 'search',
+    component: Search
   },
   {
     path: '/about',

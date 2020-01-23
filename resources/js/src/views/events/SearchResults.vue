@@ -1,39 +1,34 @@
 <template>
   <v-container fluid>
       <h1>{{ loaded ? (events.length ? 'What we have found:' : 'Nothing found :(') : 'Loading...'}}</h1>
+      <p>Not enough results? Try <router-link to="/search">extended search</router-link></p>
       <EventsGrid :loaded="loaded" :events="events"></EventsGrid>
       <v-pagination
-      v-if="search.length > 1"
-      v-model="search.page"
-      :length="search.length"
-      @input="changePage"
+      v-if="pagination.length > 1"
+      v-model="pagination.page"
+      :length="pagination.length"
+      @input="loadSearchResults(pagination.page)"
     ></v-pagination>
   </v-container>
 </template>
 
 <script>
 import EventsGrid from '../../components/EventsGrid';
+import paginationMixin from '../../mixins/pagination';
+
 export default {
     name: 'SearchResults',
     components: {
         'EventsGrid': EventsGrid,
     },
+    mixins: [paginationMixin],
     data() {
         return {
-            search: {
-                length: 1,
-                page: 1,
-                nextUrl: '',
-                prevUrl: '',
-            },
             loaded: false,
             events: []
         }
     },
     methods: {
-        changePage(page) {
-            this.loadSearchResults(page);
-        },
         loadSearchResults(page) {
             console.log('gst:', this.globalSearchText)
              this.$api.get('/search', {
@@ -43,11 +38,8 @@ export default {
                 }
             }).then(response => {
                 this.events = response.data;
-                this.search.length = response.last_page;
-                this.search.nextUrl = response.next_page_url;
-                this.search.prevUrl = response.prev_page_url;
-
                 this.loaded = true;
+                this.setPagination(response.meta);
             })
             }
     },

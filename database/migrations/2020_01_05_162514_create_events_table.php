@@ -22,7 +22,7 @@ class CreateEventsTable extends Migration
             $table->timestamps();
             $table->dateTime('starts_at');
             $table->bigInteger('creator_id')->unsigned();
-            $table->foreign('creator_id')->references('id')->on('users');
+            $table->foreign('creator_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

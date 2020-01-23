@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid><h1>Favorites</h1>
+    <v-container fluid><h1>You're registered to:</h1>
         <EventsGrid :events="events" :loaded="loaded"></EventsGrid>
     </v-container>
 </template>

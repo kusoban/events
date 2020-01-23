@@ -2,17 +2,25 @@
   <v-container fluid> 
       <h1>{{`Category: ${String(this.$route.params.category)}`| capitalize}}</h1>
   <EventsGrid :loaded="loaded" :events="events"></EventsGrid>
+   <v-pagination
+      v-if="pagination.length > 1"
+      v-model="pagination.page"
+      :length="pagination.length"
+      @input="loadEvents"
+    ></v-pagination>
   </v-container>
 </template>
 
 <script>
 import EventsGrid from '../../components/EventsGrid'
+import paginationMixin from '../../mixins/pagination'
 
 export default {
     name: 'CategoryEvents',
     components: {
         'EventsGrid': EventsGrid
     },
+    mixins: [paginationMixin],
     data() {
         return {
             events: [],
@@ -24,19 +32,35 @@ export default {
             return this.$route.params.category;
         }
     },
-    watch: {
-        category: {
-            immediate: true,
-            handler(name) {
+    methods: {
+        loadEvents() {
                 this.loaded = false;
                 this.events = [];
                 this.$api.get('/search/category', {
                     params: {
-                        name
+                        name: this.category,
+                        page: this.pagination.page || 1,
                     }
                 }).then(response => {
                     this.events = response.data;
                     this.loaded = true;
+                })
+            }
+    },
+    watch: {
+        category: {
+            immediate: true,
+            handler(category) {
+                this.loaded = false;
+                this.events = [];
+                this.$api.get('/search/category', {
+                    params: {
+                        name: category
+                    }
+                }).then(response => {
+                    this.events = response.data;
+                    this.loaded = true;
+                    this.setPagination(response.meta);
                 })
             }
         }
