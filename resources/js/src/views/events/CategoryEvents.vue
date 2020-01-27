@@ -38,7 +38,7 @@ export default {
                 this.events = [];
                 this.$api.get('/search/category', {
                     params: {
-                        name: this.category,
+                        name: this.category, 
                         page: this.pagination.page || 1,
                     }
                 }).then(response => {

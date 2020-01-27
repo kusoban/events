@@ -21,6 +21,9 @@ class CreateEventsTable extends Migration
             $table->string('creator_email');
             $table->timestamps();
             $table->dateTime('starts_at');
+            $table->string('location_lat')->nullable();
+            $table->string('location_lng')->nullable();
+            $table->boolean('isPrivate')->default(false);
             $table->bigInteger('creator_id')->unsigned();
             $table->foreign('creator_id')->references('id')->on('users')->onDelete('cascade');
         });

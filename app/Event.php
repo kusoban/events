@@ -12,7 +12,7 @@ class Event extends Model
 {
     use Searchable;
     
-    protected $fillable = ['name', 'description', 'image', 'creator_id', 'creator_email', 'starts_at'];
+    protected $fillable = ['name', 'description', 'image', 'creator_id', 'creator_email', 'starts_at', 'location_lat', 'location_lng', 'isPrivate'];
 
     public function user() {
         return $this->belongsTo(User::class);
@@ -42,8 +42,6 @@ class Event extends Model
                     $this->categories()->attach($foundCategory);
                     continue;
                 }
-
-                // $this->categories()->attach(Category::create(['name' => $categoryName]));
         }
     }
 
@@ -59,5 +57,4 @@ class Event extends Model
                 $this->tags()->attach(Tag::create(['name' => $tagName]));
         }
     }
-
 }

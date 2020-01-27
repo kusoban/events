@@ -33,7 +33,8 @@ class Event extends JsonResource
             'categories' => $this->categories()->get()->map(function($category){ return ['id' => $category->id, 'name' => $category->name];}),
             'tags' => $this->tags()->get()->map(function($tag){ return ['id' => $tag->id, 'name' => $tag->name];}),
             'isFavorite' => $isFavorite,
-            'isRegisteredTo' => $isRegisteredTo
+            'isRegisteredTo' => $isRegisteredTo,
+            'location' => ['lat' => $this->location_lat, 'lng' => $this->location_lng]
         ];
 
     }

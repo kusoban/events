@@ -43,7 +43,6 @@ export default {
         };
     },
     mounted() {
-      console.log('access', this.$store.getters.user.accessToken);
         this.$api
             .get("/events", {
                 headers: {
@@ -61,7 +60,7 @@ export default {
             this.$store.commit('setSearchText', {searchText: this.searchText});
             this.$router.push('/events/search-results')
         }
-    }
+    },
 };
 </script>
 

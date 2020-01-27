@@ -41,13 +41,21 @@
         <v-btn :loading="loading.register"  color="amber" text @click="toggleRegister">{{event.isRegisteredTo ? 'Unregister' : 'Register'}}</v-btn>
     </v-card-actions>
   </v-card>
-
+   <div style="position: relative; height: 300px;" class="">
+  <Map :propsMarker="event.location" :allowCreateMarker="false"/>
+   </div>
 </v-container>
 </template>
 
 <script>
 import moment from 'moment';
+import Map from '../../components/Map';
+
 export default {
+    name: 'SingleEvent',
+    components: {
+      Map,
+    },
     mounted() {
         this.$api.get(`/events/${this.$route.params.id}`, {
           headers: {

@@ -69,17 +69,21 @@
                         <v-datetime-picker color="red" label="Select Datetime" v-model="eventToCreate.starts_at"></v-datetime-picker>
                     </v-col>
                 </v-row>
+                <div style="position: relative; height: 300px;" class="">
+                    <Map :allowCreateMarker="true" @markerLocationChange="markerLocationChange"/>
+                </div>
                 <v-btn :disabled="!eventToCreate.starts_at || !valid" @click="create">Create</v-btn>
         </v-form>
         </v-card>
             </v-container>
     </v-flex>
 </template>
-
 <script>
+import Map from '../../components/Map';
 import DatetimePicker from "vuetify-datetime-picker";
 export default {
     name: "CreateEvent",
+    components: {Map},
     mounted() {
         this.$api.get('/categories').then(response => {
             this.categories = response.data
@@ -106,11 +110,17 @@ export default {
                 starts_at: "",
                 categories: [],
                 tags: [],
+                location_lat: '',
+                location_lng: ''
             }
         };
     },
 
     methods: {
+        markerLocationChange(data) {
+           this.eventToCreate.location_lat = data.lat;
+           this.eventToCreate.location_lng = data.lng;
+        },
         create() {
             // return console.log(this.eventToCreate.starts_at)
             this.$api.post(

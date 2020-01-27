@@ -37,7 +37,7 @@ class EventController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {   
         request()->validate([
             'name' => 'required|min:2',
             'description' => 'required|min:5',
@@ -51,7 +51,9 @@ class EventController extends Controller
             'description' => request('description'),
             'starts_at' => date('Y-m-d H:i:s', strtotime(request('starts_at'))),
             'creator_id' => $user->id,
-            'creator_email' => $user->email
+            'creator_email' => $user->email,
+            'location_lat' => request('location_lat'),
+            'location_lng' => request('location_lng'),
         ];
 
 

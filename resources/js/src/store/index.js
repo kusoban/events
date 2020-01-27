@@ -37,7 +37,7 @@ const store = new Vuex.Store({
             state.globalSearchText = payload.searchText;
         },
         getUserFromLocalStorage(state) {
-            
+                
         },
         test(state) {
             state.user.id = null,

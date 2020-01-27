@@ -55,7 +55,7 @@
                         <v-col cols="12" md="4"></v-col>
                     </v-row>
                     <v-btn class="mr-2" color="warning" @click="clearFields">Clear</v-btn>
-                    <v-btn @click="search">Search</v-btn>
+                    <v-btn color="success" @click="search">Search</v-btn>
                 </v-form>
             </v-card>
             <h1>{{loading ? 'Searching...' : loaded ? (foundEvents.length ? 'What we have found:' : 'Nothing found') : '' }}</h1>
@@ -104,7 +104,7 @@ export default {
                 tags: [],
                 starts_at_from: "",
                 starts_at_to: ""
-            }
+            },
         };
     },
     methods: {
