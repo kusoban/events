@@ -75,9 +75,9 @@ const store = new Vuex.Store({
                     });
             })
         },
-        authorize({state}) {
+        authorize({getters}) {
             return new Promise((resolve, reject) => {
-            if(!state.user.accessToken) {
+            if(!getters.userIsLoggedIn) {
                 router.push('/register');
                 reject('not authorized')
             }

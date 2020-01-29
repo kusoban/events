@@ -58,39 +58,26 @@
                     <v-btn color="success" @click="search">Search</v-btn>
                 </v-form>
             </v-card>
-            <h1>{{loading ? 'Searching...' : loaded ? (foundEvents.length ? 'What we have found:' : 'Nothing found') : '' }}</h1>
-            <EventsGrid :events="foundEvents" :loaded="!loading"></EventsGrid>
-            <v-pagination
-                v-if="pagination.length > 1"
-                v-model="pagination.page"
-                :length="pagination.length"
-                @input="search(pagination.page)"
-            ></v-pagination>
+            <ListMap @changePage="search" :paginationLength="paginationLength" :events="foundEvents" :loaded="!loading">
+                <h1 @click="lel">{{loading ? 'Searching...' : loaded ? (foundEvents.length ? 'What we have found:' : 'Nothing found') : '' }}</h1>
+            </ListMap>
+            
         </v-container>
     </v-flex>
 </template>
 
 <script>
+import ListMap from '../../components/ListMap';
 import DatetimePicker from "vuetify-datetime-picker";
-import EventsGrid from "../../components/EventsGrid";
-import paginationMixin from "../../mixins/pagination";
 
 export default {
     name: "Search",
     components: {
-        EventsGrid
-    },
-    mixins: [paginationMixin],
-    mounted() {
-        this.$api.get("/categories").then(response => {
-            this.allCategories = response.data;
-        });
-        this.$api.get("/tags").then(response => {
-            this.allTags = response.data;
-        });
+        ListMap
     },
     data() {
         return {
+            paginationLength: 0,
             loading: false,
             loaded: false,
             foundEvents: [],
@@ -107,7 +94,18 @@ export default {
             },
         };
     },
+    mounted() {
+        this.$api.get("/categories").then(response => {
+            this.allCategories = response.data;
+        });
+        this.$api.get("/tags").then(response => {
+            this.allTags = response.data;
+        });
+    },
     methods: {
+        lel() {
+            alert('pitux')
+        },
         search(page) {
             (this.foundEvents = []), (this.loading = true);
             this.$api
@@ -125,7 +123,7 @@ export default {
                     this.foundEvents = response.data;
                     this.loading = false;
                     this.loaded = true;
-                    this.setPagination(response.meta);
+                    this.paginationLength = response.meta.last_page;
                 })
                 .catch(err => {
                     console.log("error in search controller:", err);

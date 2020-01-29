@@ -17,7 +17,7 @@ import CategoryEvents from '../views/events/CategoryEvents'
 import FavoriteEvents from '../views/events/FavoriteEvents'
 import RegisteredToEvents from '../views/events/RegisteredToEvents'
 import Search from '../views/events/Search'
-import Map from '../components/Map'
+import EventsMap from '../views/Map'
 
 
 function requireAuth (to, from, next) {
@@ -100,7 +100,7 @@ const routes = [
   {
     path: '/map',
     name: 'Map',
-    component: Map,
+    component: EventsMap,
   },
   {
     path: '/about',

@@ -6,18 +6,28 @@
         <v-flex xs12 sm6 md6 lg4 class="pa-2" v-for="event in events">
             <EventCard  :event="event"></EventCard>
         </v-flex>
+        <v-pagination
+                v-if="paginationLength > 1"
+                v-model="pagination.page"
+                :length="paginationLength"
+                @input="(page) => $emit('changePage', page)"
+            ></v-pagination>
     </v-row>
+    
 </template>
 
 <script>
 import EventCard from './EventCard';
-
+import paginationMixin from '../mixins/pagination';
 export default {
-    props: ['events', 'loaded'],
+    name: 'EventsGrid',
     components: {
         'EventCard': EventCard,
     },
-    name: 'EventsGrid',
+    mixins: [paginationMixin],
+    props: ['events', 'loaded', 'paginationLength'],
+    methods: {
+    }
 }
 </script>
 

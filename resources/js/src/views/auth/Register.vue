@@ -1,9 +1,10 @@
 <template>
     <v-row align="center" justify="center">
-        <v-col cols="12" sm="8" md="4">
+        <v-col cols="12" sm="8" md="6">
+            <h3 class="pb-2">Register to start using all of the available features</h3>
             <v-card class="elevation-3">
                 <v-toolbar color="primary" dark flat>
-                    <v-toolbar-title>Register form</v-toolbar-title>
+                    <v-toolbar-title>Register</v-toolbar-title>
                     <v-spacer />
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
@@ -14,7 +15,7 @@
                         <span>Source</span>
                     </v-tooltip>
                 </v-toolbar>
-                <v-form  @submit.prevent="register" v-model="form.valid">
+                <v-form class="pb-2"  @submit.prevent="register" v-model="form.valid">
                     <v-card-text>
                             <v-text-field
                                 label="Email"
@@ -45,17 +46,18 @@
                             />
                     </v-card-text>
                     <v-card-actions>
-                        <v-spacer />
-                        <v-btn 
-                            type="submit"
-                            text 
-                            :disabled="!form.valid"
-                            class
-                            large
-                            color="primary"
-                           
-                        >Register</v-btn>
-                        <v-spacer />
+                        <div class="d-flex flex-column align-center justify-center" style="width: 100%">
+                            <v-btn 
+                                type="submit"
+                                text 
+                                :disabled="!form.valid"
+                                large
+                                color="primary"
+                                class="mb-2"
+                            
+                            >Register</v-btn>
+                            <span class="text-center">Already registered? <router-link to="/login">Login</router-link></span>
+                        </div>
                     </v-card-actions>
                 </v-form>
             </v-card>

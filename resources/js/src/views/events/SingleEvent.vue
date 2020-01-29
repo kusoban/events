@@ -38,9 +38,10 @@
     <v-card-actions>
         <v-spacer/>
         <v-btn :loading="loading.favorite" color="amber" text @click="toggleFavorite">{{event.isFavorite ? 'Remove from Favorites' : 'Add to favorites'}}</v-btn>
-        <v-btn :loading="loading.register"  color="amber" text @click="toggleRegister">{{event.isRegisteredTo ? 'Unregister' : 'Register'}}</v-btn>
+        <v-btn :loading="loading.register"  color="amber" text @click="toggleRegister">{{event.isRegisteredTo ? 'Unregister' : 'Register to Event'}}</v-btn>
     </v-card-actions>
   </v-card>
+
    <div style="position: relative; height: 300px;" class="">
   <Map :propsMarker="event.location" :allowCreateMarker="false"/>
    </div>
@@ -56,6 +57,16 @@ export default {
     components: {
       Map,
     },
+    data() {
+        return {
+            
+            event: {},
+            loading: {
+              favorite: false,
+              register: false,
+            }
+        }
+    },
     mounted() {
         this.$api.get(`/events/${this.$route.params.id}`, {
           headers: {
@@ -64,15 +75,6 @@ export default {
         }).then(response => {
             this.event = (response.data)
         })
-    },
-    data() {
-        return {
-            event: {},
-            loading: {
-              favorite: false,
-              register: false,
-            }
-        }
     },
     methods: {
         getHumanDate() {
@@ -93,24 +95,25 @@ export default {
             if (diff < 24 ) return 'soon';
         },
         toggleFavorite() {
-          this.$store.dispatch('authorize').then(() => {
-            this.loading.favorite = true;
-            this.$api.post('/events/favorites', {
-              'eventId': this.event.id
-            },
-            {
-              headers: {
-                'Authorization': 'Bearer ' + this.$store.getters.user.accessToken
-              }
-            }
-            ).then(response => {
-              this.event.isFavorite = !this.event.isFavorite
-              this.loading.favorite = false
-            })
+          this.$store.dispatch('authorize')
+            .then(() => {
+              this.loading.favorite = true;
+              return this.$api.post('/events/favorites', {
+                'eventId': this.event.id
+              },
+              {
+                headers: {
+                  'Authorization': 'Bearer ' + this.$store.getters.user.accessToken
+                }
+              })
+              .then(response => {
+                this.event.isFavorite = !this.event.isFavorite
+                this.loading.favorite = false
+              })
+              }).catch(e => {
 
-          }).catch(e => {
+              })
 
-          })
         },
         toggleRegister() {
           this.$store.dispatch('authorize').then(() => {

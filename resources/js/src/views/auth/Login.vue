@@ -1,6 +1,6 @@
 <template>
     <v-row align="center" justify="center">
-        <v-col cols="12" sm="8" md="4">
+        <v-col cols="12" sm="8" md="5">
             <v-card class="elevation-3">
                 <v-toolbar color="primary" dark flat>
                     <v-toolbar-title>Login form</v-toolbar-title>
@@ -14,7 +14,7 @@
                         <span>Source</span>
                     </v-tooltip>
                 </v-toolbar>
-                <v-form @submit.prevent="login">
+                <v-form class="pb-2" @submit.prevent="login">
                     <v-card-text>
                             <v-text-field
                                 label="Email"
@@ -34,8 +34,10 @@
                             />
                     </v-card-text>
                 <v-card-actions>
-                    <v-spacer />
-                    <v-btn type="submit" text color="primary" >Login</v-btn>
+                    <div class="d-flex flex-column align-center" style="width:100%">
+                        <v-btn class="mb-2" type="submit" large text color="primary" >Login</v-btn>
+                        <span class="text-center">Don't have an account? <router-link to="/register">Register</router-link></span>
+                    </div>
                 </v-card-actions>
                 </v-form>
             </v-card>

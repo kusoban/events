@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Carbon;
 
 class Event extends JsonResource
 {
@@ -34,7 +35,8 @@ class Event extends JsonResource
             'tags' => $this->tags()->get()->map(function($tag){ return ['id' => $tag->id, 'name' => $tag->name];}),
             'isFavorite' => $isFavorite,
             'isRegisteredTo' => $isRegisteredTo,
-            'location' => ['lat' => $this->location_lat, 'lng' => $this->location_lng]
+            'location' => ['lat' => $this->location_lat, 'lng' => $this->location_lng],
+            'humanDiff' =>  Carbon::createFromDate($this->starts_at)->diffForHumans(Carbon::now()),
         ];
 
     }

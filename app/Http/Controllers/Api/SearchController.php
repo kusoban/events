@@ -30,6 +30,10 @@ class SearchController extends Controller
             $q2->orWhereRaw( 'LOWER(`description`) like ?', array( '%' . strtolower($stext) . '%' ) );
         });
         
+        if(!request('starts_at_from') && !request('starts_at_to')) {
+            $result = $result->whereDate('starts_at', '>=', Carbon::now());
+        }
+
         if(request('starts_at_from')) {
             $result = $result
                 ->where('starts_at', '>=', date(request('starts_at_from')));

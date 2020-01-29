@@ -25,6 +25,8 @@ $factory->define(Event::class, function (Faker $faker) {
         'starts_at' => $faker->dateTimeThisMonth(),
         'image' => $faker->randomElement(['1.png', '2.jpg', '3.jpg']),
         'creator_id' => $user->id,
-        'creator_email' => $user->email
+        'creator_email' => $user->email,
+        'location_lat' => $faker->latitude('46.95', '46.97'),
+        'location_lng' => $faker->longitude('31.95', '32.051')
     ];
 });

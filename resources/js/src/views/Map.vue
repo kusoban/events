@@ -1,6 +1,7 @@
 <template>
 <div class="map-wrapper">
     <div id="mapid"></div>
+    <v-btn>Save</v-btn>
 </div>
 </template>
 
@@ -9,14 +10,10 @@ import "leaflet/dist/leaflet";
 import "leaflet/dist/leaflet.css";
 export default {
     name: "Map",
-    props: ['propsMarker', 'allowCreateMarker'],
     data() {
         return {
-            map: null,
-            latlng: {
-                lat: '',
-                lng: ''
-            },
+            events: [],
+            mymap: null,
             markerIcon: L.icon({
                 iconUrl: "http://events.api/images/leaf-green.png",
                 shadowUrl: "http://events.api/images/leaf-shadow.png",
@@ -30,8 +27,8 @@ export default {
         }
     },
     mounted() {
-        console.log(this.propsMarker);
-        this.map = L.map("mapid").setView(this.propsMarker ? [this.propsMarker.lat, this.propsMarker.lng] : [46.966823,31.991351], 16);
+        this.loadEvents();
+        this.mymap = L.map("mapid").setView(this.propsMarker ? [this.propsMarker.lat, this.propsMarker.lng] : [46.966823,31.991351], 16);
         var token =
             "pk.eyJ1IjoiYnVnZmVsbGEiLCJhIjoiY2s1d2Z1dTBoMHpuODNrbzB1M2ZxN2NzdSJ9.o3Eyx8Hi0orU4nA385y28A";
         L.tileLayer(
@@ -43,17 +40,11 @@ export default {
                 id: "mapbox/streets-v11",
                 accessToken: token
             }
-        ).addTo(this.map);
+        ).addTo(this.mymap);
 
         var marker;
-        // Click works only in events/Create  component
         const onMapClick = (e) => {
-            this.latlng = e.latlng;
-            this.$emit('markerLocationChange', this.latlng);
 
-            if (marker) {
-                this.map.removeLayer(marker);
-            }
             marker = L.marker(e.latlng, {
                 draggable: true,
                 title: "Resource location",
@@ -61,39 +52,53 @@ export default {
                 riseOnHover: true,
                 icon: this.markerIcon
             })
-                .addTo(this.map)
+                .addTo(this.mymap)
                 .bindPopup(e.latlng.toString())
                 .openPopup();
-
-            // Update marker on changing it's position
-            marker.on("dragend", function(ev) {
-                var chagedPos = ev.target.getLatLng();
-                this.bindPopup(chagedPos.toString()).openPopup();
-            });
-        }
-
-        if(this.allowCreateMarker) {
-            this.map.on("click", onMapClick);
         }
     },
     methods: {
+        loadEvents() {
+            this.$api.get('/events').then(response => {
+                this.events = response.data
+            })
+        }
     },
     watch: {
+        events: {
+            immediate: true ,
+            handler (events) {
+                events.forEach(event => {
+                    console.log(event)
+                    if(!event.location) return;
+                    
+                    const latlng = new L.LatLng(event.location.lat, event.location.lng);
+                    const marker = L.marker(latlng, {
+                        title: event.name,
+                        icon: this.markerIcon,
+                    }).addTo(this.mymap)
+                        .bindPopup(`
+                            <a href="/#/event/${event.id}"><strong>${event.name}</strong></a>
+                        `)
+                })
+            }
+        },
         propsMarker: {
             immediate: true,
-            handler(v) {
-                if(v) {
-                    const marker = L.marker(v, {
+            handler(markerData) {
+                if(markerData) {
+                    const marker = L.marker(markerData, {
+                        draggable: true,
                         title: "Resource location",
                         alt: "Resource Location",
                         riseOnHover: true,
                         icon: this.markerIcon
-                    }).addTo(this.map)
-                        .bindPopup(`${v.lat}  ${v.lng}`)
+                    }).addTo(this.mymap)
+                        .bindPopup(`${markerData.lat}  ${markerData.lng}`)
                         .openPopup();
                     const latlngs = [marker.getLatLng()]
-                    const markerBounds = L.latLngBounds(latlngs);
-                    this.map.setView([v.lat, v.lng]);
+                    const markerBounds = L.latLngBounds(latlngs)                        
+                    this.mymap.fitBounds(markerBounds)
                 }
             }
         }

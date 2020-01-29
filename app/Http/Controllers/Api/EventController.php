@@ -26,7 +26,7 @@ class EventController extends Controller
         $events = Event::whereDate('starts_at', '>=', Carbon::today())
             ->orderBy('starts_at', 'asc')
             ->with('tags')
-            ->paginate(16);
+            ->paginate(15);
         return EventResource::collection($events);
     }
 
