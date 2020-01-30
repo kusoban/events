@@ -6,14 +6,13 @@
             :loaded="loaded" 
             :events="events"
         >
-            <h1 class="text-center">{{loaded ? 'Upcoming events:' : 'Loading...'}}</h1>
+            <h1 class="text-center">{{loaded ? 'Upcoming events' : 'Loading...'}}</h1>
         </ListMap>
     </v-container>
 </template>
 
 <script>
 import ListMap from "../../components/ListMap";
-// import paginationMixin from '../../mixins/pagination';
 
 export default {
     name: "Events",

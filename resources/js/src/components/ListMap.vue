@@ -1,10 +1,12 @@
 <template>
     <div>
         <slot></slot>
-        <span>Show results as:</span>
+        <div class="mt-3">
+            <span >Show events as:</span>
+        </div>
         <v-radio-group v-model="listMode" row>
-            <v-radio label="List" :value="true"></v-radio>
             <v-radio label="Map" :value="false"></v-radio>
+            <v-radio label="List" :value="true"></v-radio>
         </v-radio-group>
         <EventsGrid
             v-if="listMode"
@@ -13,7 +15,7 @@
             :loaded="loaded"
             :events="events"
         ></EventsGrid>
-        <div v-else style="position: relative; height: 500px;">
+        <div v-if="!listMode && events.length" style="position: relative; height: 500px;">
             <EventsMap 
                 :loaded="loaded" 
                 :events="events"
@@ -38,7 +40,7 @@ export default {
     },
     data() {
         return {
-            listMode: true
+            listMode: false
         };
     },
     mounted() {

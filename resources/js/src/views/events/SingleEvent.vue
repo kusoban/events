@@ -7,7 +7,6 @@
             v-if="!event.id"
           ></v-skeleton-loader>
 
-    </v-skeleton-loader>
     <v-card 
     v-if="event.id"
     class="mx-auto text-left"
@@ -31,6 +30,12 @@
       </v-list-item-icon>
       <v-list-item-subtitle>{{getTime()}} / <span :class="['humanTime', getUrgency()]">{{getHumanDate()}}</span></v-list-item-subtitle>
     </v-list-item>
+   <v-list-item v-if="usersWhoRegistered.length">
+      <v-list-item-icon>
+        <v-icon>mdi-account-group</v-icon>
+      </v-list-item-icon>
+      <v-list-item-subtitle><span><a @click="showUsersWhoRegistered = !showUsersWhoRegistered" href="javascript:void(0)">{{`${usersWhoRegistered.length} ${usersWhoRegistered.length > 1 ? 'people' : 'person'}`}}</a> {{usersWhoRegistered.length > 1 ? 'have' : 'has'}} registered to this event</span></v-list-item-subtitle>
+    </v-list-item>
   </div>
     <v-card-text>
     {{event.description}}
@@ -41,7 +46,9 @@
         <v-btn :loading="loading.register"  color="amber" text @click="toggleRegister">{{event.isRegisteredTo ? 'Unregister' : 'Register to Event'}}</v-btn>
     </v-card-actions>
   </v-card>
-
+   <RegisteredUsersList @closeDialog="closeDialog" :users="usersWhoRegistered" :dialog="showUsersWhoRegistered">
+    
+   </RegisteredUsersList>
    <div style="position: relative; height: 300px;" class="">
   <Map :propsMarker="event.location" :allowCreateMarker="false"/>
    </div>
@@ -50,16 +57,19 @@
 
 <script>
 import moment from 'moment';
+import RegisteredUsersList from './RegisteredUsersList';
 import Map from '../../components/Map';
 
 export default {
     name: 'SingleEvent',
     components: {
+      RegisteredUsersList,
       Map,
     },
     data() {
         return {
-            
+            usersWhoRegistered: [],
+            showUsersWhoRegistered: false,
             event: {},
             loading: {
               favorite: false,
@@ -74,6 +84,9 @@ export default {
           }
         }).then(response => {
             this.event = (response.data)
+        })
+        this.$api.get(`/events/${this.$route.params.id}/registered-users`).then(response => {
+          this.usersWhoRegistered = response;
         })
     },
     methods: {
@@ -135,6 +148,9 @@ export default {
             console.log('err:::', err)
           })
         },
+        closeDialog(v) {
+          this.showUsersWhoRegistered = false;
+        }
     },
 }
 </script>

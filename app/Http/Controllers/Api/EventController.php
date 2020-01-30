@@ -158,4 +158,10 @@ class EventController extends Controller
 
         return response()->json($events, 200);
     }
+
+    public function getRegisteredUsers(Event $event) {
+        $users = $event->usersWhoRegistered()->get()->pluck('email');
+
+        return $users;
+    }
 }

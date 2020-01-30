@@ -36,9 +36,7 @@ const store = new Vuex.Store({
         setSearchText(state, payload) {
             state.globalSearchText = payload.searchText;
         },
-        getUserFromLocalStorage(state) {
-                
-        },
+        
         test(state) {
             state.user.id = null,
             state.user.accessToken = null,
@@ -77,14 +75,35 @@ const store = new Vuex.Store({
         },
         authorize({getters}) {
             return new Promise((resolve, reject) => {
-            if(!getters.userIsLoggedIn) {
-                router.push('/register');
-                reject('not authorized')
-            }
-            resolve()
+
+                if(!getters.userIsLoggedIn) {
+                    router.push('/register');
+                    reject('not authorized')
+                }
+                
+                resolve()
 
             }); 
-        }
+        },
+        getUserFromLocalStorage({commit}) {
+            const accessToken = localStorage.getItem('access-token');
+
+            if(accessToken) {
+                api.get('/me', {
+                    headers: {
+                        Authorization: 'Bearer ' + accessToken,
+                    }
+                }).then(({data: {id, email}}) => {
+
+                    commit('setUser', {
+                        id,
+                        email,
+                        accessToken,
+                    })
+                    
+                })
+            }
+        },
     },
     getters: {
         userIsLoggedIn(state) {

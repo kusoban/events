@@ -60,7 +60,6 @@ export default {
             this.$store.dispatch('login', {email: this.email, password: this.password}).then(() => {
             }).then((data) => {
                 this.$router.push('/')
-                console.log('data from component', data);
             }).catch(err => {
                 console.log('err from component:', err)
             });

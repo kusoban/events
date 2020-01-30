@@ -40,16 +40,17 @@ Route::group(['prefix' => 'events'], function(){
    
     Route::get('/', 'Api\EventController@index');
     Route::post('/', 'Api\EventController@store')->middleware('auth:api');
-   
+    Route::get('/{event}', [ 'as' => 'show-event', 'uses' => 'Api\EventController@show']);
+    Route::put('/{event}', 'Api\EventController@update')->middleware('auth:api');
+    Route::delete('/{event}', 'Api\EventController@destroy')->middleware('auth:api');
+    
     Route::post('/register', 'Api\EventController@toggleRegister')->middleware('auth:api');
     Route::get('/registered', 'Api\EventController@getEventsUserIsRegisteredTo')->middleware('auth:api');
    
     Route::post('/favorites', 'Api\EventController@toggleFavorite')->middleware('auth:api');
     Route::get('/favorites', 'Api\EventController@getFavoriteEvents')->middleware('auth:api');
-   
-    Route::get('/{event}', [ 'as' => 'show-event', 'uses' => 'Api\EventController@show']);
-    Route::put('/{event}', 'Api\EventController@update')->middleware('auth:api');
-    Route::delete('/{event}', 'Api\EventController@destroy')->middleware('auth:api');
+
+    Route::get('/{event}/registered-users', 'Api\EventController@getRegisteredUsers');
 });
 
 Route::group(['prefix' => 'categories'], function() {
