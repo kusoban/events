@@ -17,7 +17,7 @@ const store = new Vuex.Store({
         globalSearchText: '',
     },
     mutations: {
-        setGuardChecked(state, payload) {
+        setGuardChecked (state, payload) {
             state.guardChecked = payload;
         },
 
@@ -33,14 +33,14 @@ const store = new Vuex.Store({
         setUser (state, user) {
             state.user = user;
         },
-        setSearchText(state, payload) {
+        setSearchText (state, payload) {
             state.globalSearchText = payload.searchText;
         },
-        
-        test(state) {
+
+        test (state) {
             state.user.id = null,
-            state.user.accessToken = null,
-            state.user.email = null
+                state.user.accessToken = null,
+                state.user.email = null
         }
     },
 
@@ -48,80 +48,92 @@ const store = new Vuex.Store({
         login ({ commit }, payload) {
             return new Promise((res, rej) => {
                 api.post('/login', payload)
-                    .then(data => {
-                        console.log(data)
-                        commit('setUser', { email: data.user.email, id: data.user.id, accessToken: data.token_data.access_token })
+                    .then(({ data: { id, email, access_token } }) => {
+                        commit('setUser', { id, email, accessToken: access_token })
                         setAccessToken(data.token_data.access_token)
                         return res()
                     }).catch(err => {
                         console.log(err.response);
                         return rej(err.response);
                     })
-            }) 
+            })
         },
-        register ({ commit }, {email, password, password_confirmation}) {
+        register ({ commit }, { email, password, password_confirmation }) {
             return new Promise((res, rej) => {
-                api.post("/register", {email, password, password_confirmation})
-                    .then((data) => {
-                        console.log(data);
-                        commit('setUser', { email: data.user.email, id: data.user.id, accessToken: data.token_data.access_token })
+
+                api.post("/register", { email, password, password_confirmation })
+                
+                    .then(( { user: { id, email }, token_data: {access_token}} ) => {
+                        commit('setUser', { id, email, accessToken: access_token })
                         setAccessToken(data.token_data.access_token)
                         res()
                     })
                     .catch(err => {
+                        return console.log(err)
                         rej(err.response)
                     });
+
             })
         },
-        authorize({getters}) {
+
+        authorize ({ getters }) {
             return new Promise((resolve, reject) => {
 
-                if(!getters.userIsLoggedIn) {
+                if (!getters.userIsLoggedIn) {
                     router.push('/register');
                     reject('not authorized')
                 }
-                
+
                 resolve()
 
-            }); 
+            });
         },
-        getUserFromLocalStorage({commit}) {
+
+        getUserFromLocalStorage ({ commit }) {
             const accessToken = localStorage.getItem('access-token');
 
-            if(accessToken) {
-                api.get('/me', {
-                    headers: {
-                        Authorization: 'Bearer ' + accessToken,
+            if (accessToken) {
+                api.get('/me',
+                    { 
+                        headers: {
+                            Authorization: 'Bearer ' + accessToken,
+                        } 
                     }
-                }).then(({data: {id, email}}) => {
+                ).then(({ data: { id, email } }) => {
 
                     commit('setUser', {
                         id,
                         email,
                         accessToken,
                     })
-                    
+
                 })
             }
         },
     },
+
     getters: {
-        userIsLoggedIn(state) {
+
+        userIsLoggedIn (state) {
             return !!state.user.id;
         },
-        user(state) {
+
+        user (state) {
             return state.user;
         },
+
         test () {
             return 'kek'
         },
-        globalSearchText(state) {
+
+        globalSearchText (state) {
             return state.globalSearchText
-        }
+        },
+
     }
 })
 
-function setAccessToken(token) {
+function setAccessToken (token) {
     localStorage.setItem('access-token', token);
 }
 

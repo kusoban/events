@@ -5,6 +5,7 @@
 </template>
 
 <script>
+
 import EventsGrid from '../../components/EventsGrid';
 export default {
     name: 'RegisteredToEvents',

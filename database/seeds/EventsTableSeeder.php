@@ -8,7 +8,7 @@ use App\Category;
 class EventsTableSeeder extends Seeder 
 {
     public function run () {
-        factory(Event::class, 10000)->create();
+        factory(Event::class, 2500)->create();
         $categories = Category::all();
         $tags = Tag::all();
 

@@ -78,6 +78,7 @@ export default {
         }
     },
     mounted() {
+      
         this.$api.get(`/events/${this.$route.params.id}`, {
           headers: {
             'Authorization': 'Bearer ' + this.$store.getters.user.accessToken,

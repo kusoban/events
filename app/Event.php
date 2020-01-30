@@ -5,9 +5,6 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
 
-use App\Category;
-use App\Tag;
-
 class Event extends Model
 {
     use Searchable;
@@ -16,6 +13,10 @@ class Event extends Model
 
     public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    public function place() {
+        return $this->belongsTo(Place::class);
     }
 
     public function tags() {

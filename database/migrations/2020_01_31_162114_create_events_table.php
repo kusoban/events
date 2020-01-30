@@ -24,6 +24,8 @@ class CreateEventsTable extends Migration
             $table->string('location_lat')->nullable();
             $table->string('location_lng')->nullable();
             $table->boolean('isPrivate')->default(false);
+            $table->unsignedBigInteger('place_id')->nullable();
+            $table->foreign('place_id')->references('id')->on('places');
             $table->bigInteger('creator_id')->unsigned();
             $table->foreign('creator_id')->references('id')->on('users')->onDelete('cascade');
         });

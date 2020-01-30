@@ -1,10 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
-// use Illuminate\Routing\Route;
-use Illuminate\Support\Facades\DB;
-use App\Event;
-use GuzzleHttp\Middleware;
+use Illuminate\Support\Facades\Route;
+// use Illuminate\Http\Request;
+// use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +35,11 @@ Route::group(['prefix' => 'users'], function(){
 
 Route::group(['prefix' => 'events'], function(){
     // Route::get('/filter', 'Api\EventController@filter');
+    Route::post('/register', 'Api\EventController@toggleRegister')->middleware('auth:api');
+    Route::get('/registered', 'Api\EventController@getEventsUserIsRegisteredTo')->middleware('auth:api');
+   
+    Route::post('/favorites', 'Api\EventController@toggleFavorite')->middleware('auth:api');
+    Route::get('/favorites', 'Api\EventController@getFavoriteEvents')->middleware('auth:api');
    
     Route::get('/', 'Api\EventController@index');
     Route::post('/', 'Api\EventController@store')->middleware('auth:api');
@@ -44,11 +47,6 @@ Route::group(['prefix' => 'events'], function(){
     Route::put('/{event}', 'Api\EventController@update')->middleware('auth:api');
     Route::delete('/{event}', 'Api\EventController@destroy')->middleware('auth:api');
     
-    Route::post('/register', 'Api\EventController@toggleRegister')->middleware('auth:api');
-    Route::get('/registered', 'Api\EventController@getEventsUserIsRegisteredTo')->middleware('auth:api');
-   
-    Route::post('/favorites', 'Api\EventController@toggleFavorite')->middleware('auth:api');
-    Route::get('/favorites', 'Api\EventController@getFavoriteEvents')->middleware('auth:api');
 
     Route::get('/{event}/registered-users', 'Api\EventController@getRegisteredUsers');
 });
@@ -74,3 +72,5 @@ Route::group(['prefix' => 'search'], function(){
     Route::get('/filter', 'Api\SearchController@filter');
     Route::get('/category', 'Api\SearchController@category');
 });
+
+Route::apiResource('places', 'Api\PlaceController');

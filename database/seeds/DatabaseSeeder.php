@@ -15,5 +15,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TagsTableSeeder::class);
         $this->call(CategoriesTableSeeder::class);
         $this->call(EventsTableSeeder::class);
+        $this->call(PlacesSeeder::class);
+        $this->call(PlaceTypesSeeder::class);
     }
 }

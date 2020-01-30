@@ -100,7 +100,8 @@ export default {
             }).then(() => {
                 this.$router.push('/')
             }).catch(err => {
-                this.errors = err.data.errors;
+                return console.log(err);
+                this.errors = err.response.errors;
                 console.log(err)
             });
         }
