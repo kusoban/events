@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Event;
+use App\Place;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -60,9 +61,14 @@ class EventController extends Controller
 
 
         $event = Event::create($event);
+
+        if(request('place_id')) {
+            $event->attachToPlace($user->id, request('place_id'));
+        }
+
         $categories = request('categories');
         $tags = request('tags');
-
+        
         if ($categories) {
             $event->addCategories($categories);
         }
@@ -165,6 +171,7 @@ class EventController extends Controller
     }
 
     public function getEventPlace(Event $event) {
-        return new PlaceResource($event->place()->get());
+        // return $event->place;
+        return new PlaceResource($event->place);
     }
 }

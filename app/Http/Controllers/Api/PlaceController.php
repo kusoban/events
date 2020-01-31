@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\PlaceType;
 use App\Http\Resources\Place as PlaceResource;
 use App\Event;
-use PhpParser\Node\Expr\Instanceof_;
 
 class PlaceController extends Controller
 {
@@ -16,6 +15,7 @@ class PlaceController extends Controller
     function __construct() {
         $this->middleware('auth:api', ['except' => ['index', 'show', 'getPlaceEvents']]);
     } 
+
     /**
      * Display a listing of the resource.
      *
@@ -23,7 +23,6 @@ class PlaceController extends Controller
      */
     public function index()
     {
-        
         $places = Place::with('owner', 'types', 'events')->get();
         return PlaceResource::collection($places);
     }
@@ -109,11 +108,7 @@ class PlaceController extends Controller
     }
 
     public function getPlaceEvents(Place $place) {
-        return $place->events()->get();
-    }
-
-    public function getUserPlaces() {
-        return PlaceResource::collection(auth()->user()->places()->get());
+        return $place->events()->orderBy('starts_at', 'asc')->get();
     }
 
 }

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://testix/api',
+    baseURL: 'http://events.api/api',
 })
 api.interceptors.response.use(function (response) {
     return response.data;

@@ -11,6 +11,24 @@
                         <v-list-item-content>Home</v-list-item-content>
                     </v-list-item>
                 </router-link>
+                <router-link to="/events/create">
+                    <v-list-item link v-if="$store.getters.userIsLoggedIn">
+                        <v-list-item-action>
+                            <v-icon>mdi-event</v-icon>
+                        </v-list-item-action>
+
+                        <v-list-item-content>Create Event</v-list-item-content>
+                    </v-list-item>
+                </router-link>
+                <router-link to="/places/create">
+                    <v-list-item link v-if="$store.getters.userIsLoggedIn">
+                        <v-list-item-action>
+                            <v-icon>mdi-event</v-icon>
+                        </v-list-item-action>
+
+                        <v-list-item-content>Create Place</v-list-item-content>
+                    </v-list-item>
+                </router-link>
                 <router-link to="/events/favorites">
                     <v-list-item link v-if="$store.getters.userIsLoggedIn">
                         <v-list-item-action>

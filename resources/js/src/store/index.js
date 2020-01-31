@@ -48,9 +48,9 @@ const store = new Vuex.Store({
         login ({ commit }, payload) {
             return new Promise((res, rej) => {
                 api.post('/login', payload)
-                    .then(({ data: { id, email, access_token } }) => {
+                    .then(({ user: { id, email }, token_data: { access_token} }) => {
                         commit('setUser', { id, email, accessToken: access_token })
-                        setAccessToken(data.token_data.access_token)
+                        setAccessToken(access_token)
                         return res()
                     }).catch(err => {
                         console.log(err.response);
@@ -129,6 +129,10 @@ const store = new Vuex.Store({
         globalSearchText (state) {
             return state.globalSearchText
         },
+
+        accessToken(state) {
+            return state.user.accessToken;
+        }
 
     }
 })

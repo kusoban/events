@@ -11,6 +11,7 @@ import Login from '../views/auth/Login'
 import Register from '../views/auth/Register'
 import Events from '../views/events/Events'
 import CreateEvent from '../views/events/Create'
+import CreatePlace from '../views/places/CreatePlace'
 import SingleEvent from '../views/events/SingleEvent'
 import EventsSearchResults from '../views/events/SearchResults'
 import CategoryEvents from '../views/events/CategoryEvents'
@@ -22,7 +23,6 @@ import EventsMap from '../views/Map'
 
 function requireAuth (to, from, next) {
     let token = store.getters.user.accessToken;
-    console.log(token)
     if(!token) return next('/login')
 
     if(store.getters.userIsLoggedIn) return next();
@@ -50,7 +50,13 @@ const routes = [
     component: Events
   },
   {
-    path: '/event/create',
+    path: '/places/create',
+    name: 'create-place',
+    beforeEnter: requireAuth,
+    component: CreatePlace
+  },
+  {
+    path: '/events/create',
     name: 'create-event',
     beforeEnter: requireAuth,
     component: CreateEvent

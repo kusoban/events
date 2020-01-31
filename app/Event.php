@@ -2,12 +2,11 @@
 
 namespace App;
 
+use App\Place;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Scout\Searchable;
 
 class Event extends Model
 {
-    use Searchable;
     
     protected $fillable = ['name', 'description', 'image', 'creator_id', 'creator_email', 'starts_at', 'location_lat', 'location_lng', 'isPrivate'];
 
@@ -16,7 +15,7 @@ class Event extends Model
     }
 
     public function place() {
-        return $this->belongsTo(Place::class);
+        return $this->belongsTo('App\Place');
     }
 
     public function tags() {
@@ -33,6 +32,15 @@ class Event extends Model
     
     public function usersWhoRegistered() {
         return $this->belongsToMany(User::class, 'registered_event_user');
+    }
+
+    public function attachToPlace($userId, $placeId) {
+        $place = Place::find($placeId);
+        if(!$place) return;
+
+        if ($userId != $place->owner_id) return;
+
+        $place->events()->save($this);
     }
 
     public function addCategories($categories) {
