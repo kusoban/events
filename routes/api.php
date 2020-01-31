@@ -29,12 +29,13 @@ Route::middleware('auth:api')->get('me', 'Api\AuthController@getAuthenticatedUse
 
 
 Route::group(['prefix' => 'users'], function(){
+    Route::get('/places', 'Api\UserController@getUserPlaces');
+    Route::get('/events', 'Api\UserController@getUserEvents');
     Route::get('/', 'Api\UserController@index');
     Route::post('/', 'Api\UserController@store');
 });
 
 Route::group(['prefix' => 'events'], function(){
-    // Route::get('/filter', 'Api\EventController@filter');
     Route::post('/register', 'Api\EventController@toggleRegister')->middleware('auth:api');
     Route::get('/registered', 'Api\EventController@getEventsUserIsRegisteredTo')->middleware('auth:api');
    
@@ -47,7 +48,7 @@ Route::group(['prefix' => 'events'], function(){
     Route::put('/{event}', 'Api\EventController@update')->middleware('auth:api');
     Route::delete('/{event}', 'Api\EventController@destroy')->middleware('auth:api');
     
-
+    Route::get('/{event}/place', 'Api\EventController@getEventPlace');
     Route::get('/{event}/registered-users', 'Api\EventController@getRegisteredUsers');
 });
 
@@ -74,3 +75,6 @@ Route::group(['prefix' => 'search'], function(){
 });
 
 Route::apiResource('places', 'Api\PlaceController');
+
+Route::post('places/{place}/events/{event}', 'Api\PlaceController@attachEvent');
+Route::get('places/{place}/events', 'Api\PlaceController@getPlaceEvents');

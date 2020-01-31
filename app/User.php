@@ -50,7 +50,11 @@ class User extends Authenticatable
     ];
 
     public function events() {
-        return $this->hasMany(Event::class);
+        return $this->hasMany(Event::class, 'creator_id');
+    }
+
+    public function places() {
+        return $this->hasMany(Place::class, 'owner_id');
     }
 
     public function favoriteEvents() {

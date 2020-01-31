@@ -5,13 +5,16 @@ namespace App\Http\Controllers\Api;
 use App\Place;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\PlaceType;
 use App\Http\Resources\Place as PlaceResource;
 use App\Event;
+use PhpParser\Node\Expr\Instanceof_;
+
 class PlaceController extends Controller
 {
 
     function __construct() {
-        $this->middleware('api:auth', ['except' => ['index', 'show']]);
+        $this->middleware('auth:api', ['except' => ['index', 'show', 'getPlaceEvents']]);
     } 
     /**
      * Display a listing of the resource.
@@ -21,7 +24,6 @@ class PlaceController extends Controller
     public function index()
     {
         
-        $place = Place::find(1);
         $places = Place::with('owner', 'types', 'events')->get();
         return PlaceResource::collection($places);
     }
@@ -34,11 +36,19 @@ class PlaceController extends Controller
      */
     public function store(Request $request)
     {
-        Place::create([
+         request()->validate([
+            'name' => 'required|min:2',
+            'address' => 'required|min:3',
+        ]);
+
+        $place = Place::create([
             'owner_id' => auth()->user()->id, 
             'name' => request('name'),
             'address' => request('address'), 
         ]);
+
+        return new PlaceResource($place);
+
     }
 
     /**
@@ -49,7 +59,7 @@ class PlaceController extends Controller
      */
     public function show(Place $place)
     {
-        //
+        return $place;
     }
 
     /**
@@ -61,7 +71,20 @@ class PlaceController extends Controller
      */
     public function update(Request $request, Place $place)
     {
-        //
+
+        $place->update([
+            'name' => request('name'),
+            'address' => request('address'),
+        ]);
+
+        if(request('types')) {
+            foreach(request('types') as $typeId) {
+                if(PlaceType::find($typeId) && !$place->types->contains($typeId)) {
+                    $place->types()->attach($typeId);
+                }
+            }
+        }
+        return new PlaceResource($place);
     }
 
     /**
@@ -74,4 +97,23 @@ class PlaceController extends Controller
     {
         //
     }
+
+    public function attachEvent(Place $place, Event $event) {
+        if($place->owner_id !== auth()->id() || $event->creator_id !== auth()->id()) {
+            return response()->json('not authorized', 401);
+        }
+
+        $place->events()->save($event);
+
+        return new PlaceResource($place);
+    }
+
+    public function getPlaceEvents(Place $place) {
+        return $place->events()->get();
+    }
+
+    public function getUserPlaces() {
+        return PlaceResource::collection(auth()->user()->places()->get());
+    }
+
 }

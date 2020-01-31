@@ -3,18 +3,20 @@
 namespace App\Http\Controllers\Api;
 
 use App\Event;
-use App\Category;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
+use App\Http\Resources\Place as PlaceResource;
 use App\Http\Resources\Event as EventResource;
-use App\Http\Resources\Category as CategoryResource;
 use Illuminate\Support\Carbon;
 
 class EventController extends Controller
 {
+
+    function __construct() {
+        $this->middleware('auth:api', ['except' => ['index', 'show', 'getRegisteredUsers', 'getEventPlace']]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -123,7 +125,6 @@ class EventController extends Controller
         if (!$event) return response()->json('not found', 404);
 
         $user->registeredToEvents()->toggle($event);
-
         return response(['result' => 'success'], 200);
     }
 
@@ -136,7 +137,6 @@ class EventController extends Controller
         if (!$event) return response()->json('not found', 404);
 
         $user->favoriteEvents()->toggle($event->id);
-
         return response(['result' => 'success'], 200);
     }
 
@@ -144,6 +144,7 @@ class EventController extends Controller
     {
         $user = auth()->user();
         $events = $user->registeredToEvents()->get();
+
         if (!$events) {
             return response()->json('nothing found', 404);
         }
@@ -155,13 +156,15 @@ class EventController extends Controller
     {
         $user = auth()->user();
         $events = $user->favoriteEvents()->get();
-
         return response()->json($events, 200);
     }
 
     public function getRegisteredUsers(Event $event) {
         $users = $event->usersWhoRegistered()->get()->pluck('email');
-
         return $users;
+    }
+
+    public function getEventPlace(Event $event) {
+        return new PlaceResource($event->place()->get());
     }
 }

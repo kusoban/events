@@ -15,10 +15,15 @@ class Place extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'name' => $this->name,
             'address' => $this->address,
-            'types' => $this->types()->pluck('name'),
-            'events' => $this->events()->pluck('name'),
+            'types' => $this->types()->get()->map( function ($item) {
+                return ['id' => $item->id, 'name' => $item->name];
+            }),
+            'events' => $this->events()->get()->map( function ($item) {
+                return ['id' => $item->id, 'name' => $item->name];
+            } ),
         ];
     }
 }

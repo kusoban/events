@@ -38,6 +38,7 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
+            'acceptJson',
             'throttle:60,1',
             'bindings',
         ],
@@ -61,6 +62,9 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+
+        //custom middleware to enforce Accept application/json header
+        'acceptJson' => \App\Http\Middleware\AcceptJson::class,
     ];
 
     /**

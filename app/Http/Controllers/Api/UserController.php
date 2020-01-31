@@ -6,9 +6,15 @@ use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Resources\User as UserResource;
+use App\Http\Resources\Place as PlaceResource;
+use App\Http\Resources\Event as EventResource;
+
 
 class UserController extends Controller
 {
+    function __construct() {
+        $this->middleware('auth:api', ['only' => ['getUserPlaces', 'getUserEvents']]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -80,6 +86,14 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         //
+    }
+
+    public function getUserPlaces() {
+        return PlaceResource::collection(auth()->user()->places()->get());
+    }
+
+    public function getUserEvents() {
+        return EventResource::collection(auth()->user()->events()->get());
     }
 }
 
