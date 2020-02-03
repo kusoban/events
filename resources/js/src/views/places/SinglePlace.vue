@@ -4,53 +4,39 @@
             class="mx-auto"
             max-width="555px"
             type="article, icons, actions"
-            v-if="!event.id"
+            v-if="!place.id"
           ></v-skeleton-loader>
 
     <v-card 
-    v-if="event.id"
+    v-if="place.id"
     class="mx-auto text-left"
     outlined
     max-width="555"
   >
   <v-card-title>
-    {{event.name}}
+    {{place.name}}
   </v-card-title>
   <div class="d-flex flex-wrap">
    
    <v-list-item>
       <v-list-item-icon>
-        <v-icon>mdi-calendar</v-icon>
+        <v-icon>mdi-earth</v-icon>
       </v-list-item-icon>
-      <v-list-item-subtitle>{{getDate() }}</v-list-item-subtitle>
+      <v-list-item-subtitle>{{place.address}}</v-list-item-subtitle>
     </v-list-item>
-   <v-list-item>
-      <v-list-item-icon>
-        <v-icon>mdi-clock</v-icon>
-      </v-list-item-icon>
-      <v-list-item-subtitle>{{getTime()}} / <span :class="['humanTime', getUrgency()]">{{getHumanDate()}}</span></v-list-item-subtitle>
-    </v-list-item>
-   <v-list-item v-if="usersWhoRegistered.length">
+   <!-- <v-list-item v-if="true">
       <v-list-item-icon>
         <v-icon>mdi-account-group</v-icon>
       </v-list-item-icon>
-      <v-list-item-subtitle><span><a @click="showUsersWhoRegistered = !showUsersWhoRegistered" href="javascript:void(0)">{{`${usersWhoRegistered.length} ${usersWhoRegistered.length > 1 ? 'people' : 'person'}`}}</a> {{usersWhoRegistered.length > 1 ? 'have' : 'has'}} registered to this event</span></v-list-item-subtitle>
-    </v-list-item>
+      <v-list-item-subtitle><span><a @click="showUsersWhoLikes = !showUsersWhoLikes" href="javascript:void(0)">{{`${usersWhoRegistered.length} ${usersWhoRegistered.length > 1 ? 'people' : 'person'}`}}</a> {{usersWhoRegistered.length > 1 ? 'like' : 'likes'}} this place</span></v-list-item-subtitle>
+    </v-list-item> -->
   </div>
     <v-card-text>
-    {{event.description}}
+      {{place.description}}
     </v-card-text>
-    <v-card-actions>
-        <v-spacer/>
-        <v-btn :loading="loading.favorite" color="amber" text @click="toggleFavorite">{{event.isFavorite ? 'Remove from Favorites' : 'Add to favorites'}}</v-btn>
-        <v-btn :loading="loading.register"  color="amber" text @click="toggleRegister">{{event.isRegisteredTo ? 'Unregister' : 'Register to Event'}}</v-btn>
-    </v-card-actions>
-  </v-card>
-   <!-- <RegisteredUsersList @closeDialog="closeDialog" :users="usersWhoRegistered" :dialog="showUsersWhoRegistered"> -->
-    
-   <!-- </RegisteredUsersList> -->
+    </v-card>
    <div style="position: relative; height: 300px;" class="">
-  <Map :propsMarker="event.location" :allowCreateMarker="false"/>
+      <Map :propsMarker="place.location" :allowCreateMarker="false"/>
    </div>
 </v-container>
 </template>
@@ -59,18 +45,21 @@
 import moment from 'moment';
 import RegisteredUsersList from './RegisteredUsersList';
 import Map from '../../components/Map';
+import EventsGrid from '../../components/EventsGrid';
 
 export default {
     name: 'SingleEvent',
     components: {
       RegisteredUsersList,
       Map,
+      EventsGrid
     },
     data() {
         return {
+            place: {},
+            placeEvents: [],
             usersWhoRegistered: [],
-            showUsersWhoRegistered: false,
-            event: {},
+            showUsersWhoLikes: false,
             loading: {
               favorite: false,
               register: false,
@@ -78,16 +67,25 @@ export default {
         }
     },
     mounted() {
-        console.log('mounted')
-        console.log(this.$route.params.id);
+      
         this.$api.get(`/places/${this.$route.params.id}`, {
           headers: {
             'Authorization': 'Bearer ' + this.$store.getters.user.accessToken,
           }
         }).then(response => {
           console.log(response);
-            // this.event = (response.data)
+          this.place = response.data;
         })
+
+        // this.$api.get(`/places/${this.$route.params.id}/events`, {
+        //   headers: {
+        //     'Authorization': 'Bearer ' + this.$store.getters.user.accessToken,
+        //   }
+        // }).then(response => {
+        //   console.log(response);
+        //   // this.place = response;
+        //     // this.event = (response.data)
+        // })
         // this.$api.get(`/events/${this.$route.params.id}/registered-users`).then(response => {
         //   this.usersWhoRegistered = response;
         // })

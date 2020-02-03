@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Place extends Model
 {
-    protected $fillable = ['name', 'owner_id', 'address'];
+    protected $fillable = ['name', 'owner_id', 'address', 'description', 'location_lat', 'location_lng'];
 
     public function owner() {
         return $this->belongsTo(User::class);

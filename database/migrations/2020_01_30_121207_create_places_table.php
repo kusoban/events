@@ -20,7 +20,9 @@ class CreatePlacesTable extends Migration
             $table->string('address');
             $table->unsignedBigInteger('owner_id');
             $table->timestamps();
-            
+            $table->string('location_lat')->nullable();
+            $table->string('location_lng')->nullable();
+
             $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');
         });
     }

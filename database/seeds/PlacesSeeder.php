@@ -16,6 +16,7 @@ class PlacesSeeder extends Seeder
                 'owner_id' => 1,
                 'name' => 'Krobik',
                 'address' => 'Krobik street 1',
+                'description' => 'Krobik place is the best',
             ]);
     }
 }

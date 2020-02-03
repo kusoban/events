@@ -18,6 +18,8 @@ class Place extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'address' => $this->address,
+            'description' => $this->description,
+            'location' => ['lat' => $this->location_lat, 'lng' => $this->location_lng],
             'types' => $this->types()->get()->map( function ($item) {
                 return ['id' => $item->id, 'name' => $item->name];
             }),

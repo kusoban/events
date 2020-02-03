@@ -38,12 +38,16 @@ class PlaceController extends Controller
          request()->validate([
             'name' => 'required|min:2',
             'address' => 'required|min:3',
+            'description' => 'required|min:5'
         ]);
 
         $place = Place::create([
             'owner_id' => auth()->user()->id, 
             'name' => request('name'),
             'address' => request('address'), 
+            'description' => request('description'), 
+            'location_lat' => request('location_lat'),
+            'location_lng' => request('location_lng')
         ]);
 
         if(request('events')) {

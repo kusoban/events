@@ -58,11 +58,11 @@ const store = new Vuex.Store({
                 
                     .then(( { user: { id, email }, token_data: {access_token}} ) => {
                         commit('setUser', { id, email, accessToken: access_token })
-                        setAccessToken(data.token_data.access_token)
+                        setAccessToken(access_token)
                         res()
                     })
                     .catch(err => {
-                        return console.log(err)
+                        console.log(err)
                         rej(err.response)
                     });
 
