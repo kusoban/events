@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\PlaceType;
 use App\Http\Resources\Place as PlaceResource;
 use App\Event;
+use App\Http\Resources\Event as EventResource;
 
 class PlaceController extends Controller
 {
@@ -120,7 +121,7 @@ class PlaceController extends Controller
     }
 
     public function getPlaceEvents(Place $place) {
-        return $place->events()->orderBy('starts_at', 'asc')->get();
+        return EventResource::collection($place->events()->orderBy('starts_at', 'asc')->get());
     }
 
 }

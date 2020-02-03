@@ -38,6 +38,7 @@
    <div style="position: relative; height: 300px;" class="">
       <Map :propsMarker="place.location" :allowCreateMarker="false"/>
    </div>
+   <EventsGrid :events="placeEvents" :loaded="true"></EventsGrid>
 </v-container>
 </template>
 
@@ -77,18 +78,14 @@ export default {
           this.place = response.data;
         })
 
-        // this.$api.get(`/places/${this.$route.params.id}/events`, {
-        //   headers: {
-        //     'Authorization': 'Bearer ' + this.$store.getters.user.accessToken,
-        //   }
-        // }).then(response => {
-        //   console.log(response);
-        //   // this.place = response;
-        //     // this.event = (response.data)
-        // })
-        // this.$api.get(`/events/${this.$route.params.id}/registered-users`).then(response => {
-        //   this.usersWhoRegistered = response;
-        // })
+        this.$api.get(`/places/${this.$route.params.id}/events`, {
+          headers: {
+            'Authorization': 'Bearer ' + this.$store.getters.user.accessToken,
+          }
+        }).then(response => {
+          console.log(response);
+          this.placeEvents = response.data;
+        })
     },
     methods: {
         toggleFavorite() {
