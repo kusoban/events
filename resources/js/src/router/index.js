@@ -63,6 +63,12 @@ const routes = [
     component: CreateEvent
   },
   {
+    path: '/events/favorites',
+    name: 'favorite-events',
+    beforeEnter: requireAuth,
+    component: FavoriteEvents,
+  },
+  {
     path: '/events/:id',
     name: 'show-event',
     component: SingleEvent
@@ -82,12 +88,7 @@ const routes = [
     name: 'category-events',
     component: CategoryEvents,
   },
-  {
-    path: '/events/favorites',
-    name: 'favorite-events',
-    beforeEnter: requireAuth,
-    component: FavoriteEvents,
-  },
+  
   {
     path: '/events/registered',
     name: 'registered-to-events',

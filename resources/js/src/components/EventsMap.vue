@@ -48,6 +48,7 @@ export default {
             ).addTo(this.map);
         },
         renderMarkers() {
+            console.log('kekich')
              this.events.forEach(event => {
                 // return console.log(event.location);
                 if(!event.location) return;

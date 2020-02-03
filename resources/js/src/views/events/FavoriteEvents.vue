@@ -1,16 +1,16 @@
 <template>
     <v-container fluid>
         <h1>Favorites</h1>
-        <EventsGrid :events="events" :loaded="loaded"></EventsGrid>
+        <ListMap v-if="events.length" :events="events" :loaded="loaded"></ListMap>
     </v-container>
 </template>
 
 <script>
-import EventsGrid from '../../components/EventsGrid';
+import ListMap from '../../components/ListMap';
 export default {
     name: 'FavoriteEvents',
     components: {
-        EventsGrid,
+        ListMap,
     },
     data() {
         return {
@@ -24,7 +24,7 @@ export default {
                 'Authorization': 'Bearer ' + this.$store.getters.user.accessToken
             }
         }).then(response => {
-            this.events = response;
+            this.events = response.data;
             this.loaded = true;
         }).catch(err => {
             if(err.response.status = 404) {

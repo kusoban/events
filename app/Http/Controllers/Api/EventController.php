@@ -162,7 +162,7 @@ class EventController extends Controller
     {
         $user = auth()->user();
         $events = $user->favoriteEvents()->get();
-        return response()->json($events, 200);
+        return EventResource::collection($events);
     }
 
     public function getRegisteredUsers(Event $event) {
