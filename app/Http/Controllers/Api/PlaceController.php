@@ -46,6 +46,14 @@ class PlaceController extends Controller
             'address' => request('address'), 
         ]);
 
+        if(request('events')) {
+            $place->attachEvents(request('events'));
+        }
+
+        if(request('types')) {
+            $place->attachTypes(request('types'));
+        }
+
         return new PlaceResource($place);
 
     }
@@ -58,7 +66,7 @@ class PlaceController extends Controller
      */
     public function show(Place $place)
     {
-        return $place;
+        return new PlaceResource($place);
     }
 
     /**

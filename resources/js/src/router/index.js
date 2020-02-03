@@ -13,6 +13,7 @@ import Events from '../views/events/Events'
 import CreateEvent from '../views/events/Create'
 import CreatePlace from '../views/places/CreatePlace'
 import SingleEvent from '../views/events/SingleEvent'
+import SinglePlace from '../views/places/SinglePlace'
 import EventsSearchResults from '../views/events/SearchResults'
 import CategoryEvents from '../views/events/CategoryEvents'
 import FavoriteEvents from '../views/events/FavoriteEvents'
@@ -22,10 +23,10 @@ import EventsMap from '../views/Map'
 
 
 function requireAuth (to, from, next) {
+    if(store.getters.userIsLoggedIn) return next();
     let token = store.getters.user.accessToken;
     if(!token) return next('/login')
 
-    if(store.getters.userIsLoggedIn) return next();
 
     axios.get('/me', {
       headers: {
@@ -62,9 +63,14 @@ const routes = [
     component: CreateEvent
   },
   {
-    path: '/event/:id',
+    path: '/events/:id',
     name: 'show-event',
     component: SingleEvent
+  },
+  {
+    path: '/places/:id',
+    name: 'show-event',
+    component: SinglePlace
   },
   {
     path: '/events/search-results',

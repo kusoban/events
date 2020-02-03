@@ -20,4 +20,26 @@ class Place extends Model
         return $this->hasMany(Event::class);
     }
 
+    public function attachEvents($events) {
+        foreach($events as $eventId) {
+            $event = Event::find($eventId);
+            $userIsCreatorOfTheEvent = auth()->id() == $event->creator_id;
+
+            if(!$event || !$userIsCreatorOfTheEvent) continue;
+
+            $this->events()->save($event);
+        }
+    }
+
+    public function attachTypes($placeTypes) {
+        foreach($placeTypes as $placeTypeId) {
+            $placeType = PlaceType::find($placeTypeId);
+            $userIsOwnerOfPlace = auth()->id() == $this->owner_id;
+
+            if(!$placeType || !$userIsOwnerOfPlace) continue;
+
+            $this->types()->attach($placeType);
+        }
+    }
+
 }

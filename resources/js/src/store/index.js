@@ -5,10 +5,8 @@ import router from '../router/'
 import api from '../axios/api';
 
 Vue.use(Vuex);
-// console.log(localStorage.getItem('access-token'))
 const store = new Vuex.Store({
     state: {
-        guardChecked: false,
         user: {
             id: null,
             email: null,
@@ -17,13 +15,8 @@ const store = new Vuex.Store({
         globalSearchText: '',
     },
     mutations: {
-        setGuardChecked (state, payload) {
-            state.guardChecked = payload;
-        },
-
         logout (state) {
             localStorage.clear('access-token')
-            state.guardChecked = false;
             state.user = {
                 id: null,
                 email: null,

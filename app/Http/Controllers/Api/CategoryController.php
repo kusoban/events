@@ -6,7 +6,6 @@ use App\Category;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\Category as CategoryResource;
-use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
 
 class CategoryController extends Controller
 {
@@ -17,6 +16,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
+        // return 1;
         return CategoryResource::collection(Category::all());
     }
 

@@ -75,6 +75,7 @@ Route::group(['prefix' => 'search'], function(){
 });
 
 Route::apiResource('places', 'Api\PlaceController');
+Route::apiResource('place-types', 'Api\PlaceTypeController');
 
 Route::post('places/{place}/events/{event}', 'Api\PlaceController@attachEvent');
 Route::get('places/{place}/events', 'Api\PlaceController@getPlaceEvents');

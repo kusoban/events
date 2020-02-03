@@ -131,7 +131,7 @@ export default {
                         'Authorization': 'Bearer ' + this.$store.getters.user.accessToken
                     }
                 }).then(response => {
-                    this.$router.push(`/event/${response.data.id}`)
+                    this.$router.push(`/events/${response.data.id}`)
                 })
         },
         addTag() {

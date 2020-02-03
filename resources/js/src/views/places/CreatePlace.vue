@@ -13,6 +13,13 @@
                             required
                         ></v-text-field>
                     </v-col>
+                    <v-col cols="12" md="4">
+                        <v-text-field
+                            v-model="placeToCreate.address"
+                            label="Place Address"
+                            required
+                        ></v-text-field>
+                    </v-col>
 
                     <v-col cols="12" md="4">
                         <v-textarea
@@ -21,6 +28,20 @@
                             label="Description"
                             required
                         ></v-textarea>
+                    </v-col>
+                    <v-col cols="12" md="4">
+                        <v-autocomplete
+                            v-model="placeToCreate.types"
+                            :items="placeTypes"
+                            item-text="name"
+                            item-value="id"
+                            outlined
+                            dense
+                            chips
+                            small-chips
+                            label="Types"
+                            multiple
+                        ></v-autocomplete>
                     </v-col>
                     <v-col cols="12" md="4">
                         <v-autocomplete
@@ -37,6 +58,10 @@
                         ></v-autocomplete>
                     </v-col>
                     <v-col cols="12" md="4">
+                        <p>
+                        Do you want to add any of your created events to the place?
+
+                        </p>
                         <v-autocomplete
                             v-model="placeToCreate.events"
                             :items="events"
@@ -49,10 +74,6 @@
                             label="events"
                             multiple
                         ></v-autocomplete>
-                    </v-col>
-
-                    <v-col cols="12" md="4">
-                        <v-datetime-picker color="red" label="Select Datetime" v-model="placeToCreate.starts_at"></v-datetime-picker>
                     </v-col>
                 </v-row>
                 <div style="position: relative; height: 300px;" class="">
@@ -71,9 +92,12 @@ export default {
     name: "CreatePlace",
     components: {Map},
     mounted() {
-
+        
         this.$api.get('/categories').then(response => {
             this.categories = response.data
+        })
+        this.$api.get('/place-types').then(response => {
+            this.placeTypes = response.data
         })
 
         this.$api.get('/users/events', {
@@ -83,11 +107,10 @@ export default {
         }).then(response => {
             this.events = response.data
         })
-        console.log('kekich')
-    },
-    data() {
+    }, data() {
         return {
             categories: [],
+            placeTypes: [],
             events: [],
             valid: false,
             nameRules: [
@@ -101,9 +124,10 @@ export default {
                     "Description must be at least 10 characters"
             ],
             placeToCreate: {
+                types: [],
+                events: [],
                 name: "",
                 description: "",
-                starts_at: "",
                 categories: [],
                 location_lat: '',
                 location_lng: ''
@@ -113,19 +137,22 @@ export default {
 
     methods: {
         markerLocationChange(data) {
+            console.log('test')
            this.placeToCreate.location_lat = data.lat;
            this.placeToCreate.location_lng = data.lng;
+           console.log(this.placeToCreate.location_lat)
+           console.log(this.placeToCreate.location_lng)
         },
         create() {
             this.$api.post(
-                "/events",
+                "/places",
                 this.placeToCreate,
                 {
                     headers: {
                         'Authorization': 'Bearer ' + this.$store.getters.user.accessToken
                     }
                 }).then(response => {
-                    this.$router.push(`/event/${response.data.id}`)
+                    this.$router.push(`/places/${response.data.id}`)
                 })
         },
     }

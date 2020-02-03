@@ -46,9 +46,9 @@
         <v-btn :loading="loading.register"  color="amber" text @click="toggleRegister">{{event.isRegisteredTo ? 'Unregister' : 'Register to Event'}}</v-btn>
     </v-card-actions>
   </v-card>
-   <RegisteredUsersList @closeDialog="closeDialog" :users="usersWhoRegistered" :dialog="showUsersWhoRegistered">
+   <!-- <RegisteredUsersList @closeDialog="closeDialog" :users="usersWhoRegistered" :dialog="showUsersWhoRegistered"> -->
     
-   </RegisteredUsersList>
+   <!-- </RegisteredUsersList> -->
    <div style="position: relative; height: 300px;" class="">
   <Map :propsMarker="event.location" :allowCreateMarker="false"/>
    </div>
@@ -78,36 +78,21 @@ export default {
         }
     },
     mounted() {
-      
-        this.$api.get(`/events/${this.$route.params.id}`, {
+        console.log('mounted')
+        console.log(this.$route.params.id);
+        this.$api.get(`/places/${this.$route.params.id}`, {
           headers: {
             'Authorization': 'Bearer ' + this.$store.getters.user.accessToken,
           }
         }).then(response => {
-            this.event = (response.data)
+          console.log(response);
+            // this.event = (response.data)
         })
-        this.$api.get(`/events/${this.$route.params.id}/registered-users`).then(response => {
-          this.usersWhoRegistered = response;
-        })
+        // this.$api.get(`/events/${this.$route.params.id}/registered-users`).then(response => {
+        //   this.usersWhoRegistered = response;
+        // })
     },
     methods: {
-        getHumanDate() {
-            if(!this.event.starts_at) return 'Loading';
-            return moment(this.event.starts_at, 'YYYY-MM-DD HH:mm:ss').fromNow();
-        },
-        getDate() {
-            if(!this.event.starts_at) return 'Loading';
-            return moment(this.event.starts_at).format('MMMM Do YYYY');
-        },
-        getTime() {
-            if(!this.event.starts_at) return 'Loading';
-            return moment(this.event.starts_at).format('HH:mm');
-        },
-        getUrgency() {
-            const diff = moment(this.event.starts_at).diff(moment(), 'hours');
-            if(diff < 0) return 'past';
-            if (diff < 24 ) return 'soon';
-        },
         toggleFavorite() {
           this.$store.dispatch('authorize')
             .then(() => {
