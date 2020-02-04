@@ -26,6 +26,7 @@ export default {
             console.log(response.data);
             this.place = response.data;
             this.place.types = response.data.types.map(v => v.id);
+            this.place.events = response.data.events.map(v => v.id);
         }).catch(err => {
             console.log(err.response);
         })

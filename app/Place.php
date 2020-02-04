@@ -9,7 +9,7 @@ class Place extends Model
     protected $fillable = ['name', 'owner_id', 'address', 'description', 'location_lat', 'location_lng'];
 
     public function owner() {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'owner_id');
     }
 
     public function types() {
@@ -22,7 +22,7 @@ class Place extends Model
 
     public function attachEvents($events) {
         foreach($events as $eventId) {
-            $event = isset($eventId->name) ? Event::find($eventId->id) : Event::find($eventId);
+            $event = Event::find($eventId);
             $userIsCreatorOfTheEvent = auth()->id() == $event->creator_id;
 
             if(!$event || !$userIsCreatorOfTheEvent || $this->events->contains($event)) continue;
@@ -52,6 +52,19 @@ class Place extends Model
 
             $this->types()->attach($category);
         }
+    }
+
+    public function removeEvents($events) {
+        foreach($events as $eventId) {
+            $event = Event::find($eventId);
+            $userIsCreatorOfTheEvent = auth()->id() == $event->creator_id;
+
+            if(!$event || !$userIsCreatorOfTheEvent || !$this->events->contains($event)) continue;
+            
+            $this->events->find($eventId)->delete();
+        }
+        return true;
+
     }
 
 }

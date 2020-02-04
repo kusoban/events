@@ -10,8 +10,8 @@ class Event extends Model
     
     protected $fillable = ['name', 'description', 'image', 'creator_id', 'creator_email', 'starts_at', 'location_lat', 'location_lng', 'isPrivate'];
 
-    public function user() {
-        return $this->belongsTo(User::class);
+    public function creator() {
+        return $this->belongsTo(User::class, 'creator_id');
     }
 
     public function place() {

@@ -140,6 +140,21 @@ class PlaceController extends Controller
         return new PlaceResource($place);
     }
 
+    public function detachEvent(Place $place, Event $event) {
+        if($place->owner_id !== auth()->id() || $event->creator_id !== auth()->id()) {
+            return response()->json('not authorized', 401);
+        }
+
+        if(!$event->place()->getResults() || $event->place->id != $place->id) {
+            return response()->json('Place doesn\'t contain the event', 422);
+        }
+
+        $event->place()->dissociate();
+        $event->save();
+
+        return new PlaceResource($place);
+    }
+
     public function getPlaceEvents(Place $place) {
         return EventResource::collection($place->events()->orderBy('starts_at', 'asc')->get());
     }
