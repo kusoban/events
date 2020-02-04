@@ -36,12 +36,13 @@ class PlaceController extends Controller
      */
     public function store(Request $request)
     {
-         request()->validate([
+        $validated_data = request()->validate([
             'name' => 'required|min:2',
             'address' => 'required|min:3',
             'description' => 'required|min:5'
         ]);
 
+        
         $place = Place::create([
             'owner_id' => auth()->user()->id, 
             'name' => request('name'),
@@ -57,6 +58,10 @@ class PlaceController extends Controller
 
         if(request('types')) {
             $place->attachTypes(request('types'));
+        }
+
+        if(request('categories')) {
+            $place->attachCategories(request('categories'));
         }
 
         return new PlaceResource($place);
@@ -84,18 +89,32 @@ class PlaceController extends Controller
     public function update(Request $request, Place $place)
     {
 
+        request()->validate([
+            'name' => 'min:2',
+            'address' => 'min:3',
+            'description' => 'min:5'
+        ]);
+
         $place->update([
-            'name' => request('name'),
-            'address' => request('address'),
+            'name' => request('name') || $place->name,
+            'address' => request('address') || $place->address,
+            'description' => request('description') || $place->description,
+            'location_lat' => request('location_lat') || $place->location_lat,
+            'location_lng' => request('location_lng') || $place->location_lng
         ]);
 
         if(request('types')) {
-            foreach(request('types') as $typeId) {
-                if(PlaceType::find($typeId) && !$place->types->contains($typeId)) {
-                    $place->types()->attach($typeId);
-                }
-            }
+            $place->attachTypes(request('types'));
         }
+        
+        if(request('categories')) {
+            $place->attachCategories($request('categories'));
+        }
+
+        if(request('events')) {
+            $place->attachEvents(request('events'));
+        }
+        
         return new PlaceResource($place);
     }
 

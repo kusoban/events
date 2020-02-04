@@ -12,6 +12,7 @@ import Register from '../views/auth/Register'
 import Events from '../views/events/Events'
 import CreateEvent from '../views/events/Create'
 import CreatePlace from '../views/places/CreatePlace'
+import EditPlace from '../views/places/EditPlace'
 import SingleEvent from '../views/events/SingleEvent'
 import SinglePlace from '../views/places/SinglePlace'
 import EventsSearchResults from '../views/events/SearchResults'
@@ -56,6 +57,7 @@ const routes = [
     beforeEnter: requireAuth,
     component: CreatePlace
   },
+ 
   {
     path: '/events/create',
     name: 'create-event',
@@ -75,8 +77,14 @@ const routes = [
   },
   {
     path: '/places/:id',
-    name: 'show-event',
+    name: 'show-place',
     component: SinglePlace
+  },
+   {
+    path: '/places/:id/edit',
+    name: 'edit-place',
+    beforeEnter: requireAuth,
+    component: EditPlace
   },
   {
     path: '/events/search-results',

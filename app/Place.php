@@ -24,8 +24,8 @@ class Place extends Model
         foreach($events as $eventId) {
             $event = Event::find($eventId);
             $userIsCreatorOfTheEvent = auth()->id() == $event->creator_id;
-
-            if(!$event || !$userIsCreatorOfTheEvent) continue;
+            
+            if(!$event || !$userIsCreatorOfTheEvent || $this->events->contains($event)) continue;
 
             $this->events()->save($event);
         }
@@ -36,9 +36,21 @@ class Place extends Model
             $placeType = PlaceType::find($placeTypeId);
             $userIsOwnerOfPlace = auth()->id() == $this->owner_id;
 
-            if(!$placeType || !$userIsOwnerOfPlace) continue;
+            if(!$placeType || !$userIsOwnerOfPlace || $this->types->contains($placeType)) continue;
 
             $this->types()->attach($placeType);
+        }
+    }
+
+    public function attachCategories($categories) {
+        foreach($categories as $categoryId) {
+            $category = Category::find($categoryId);
+
+            $userIsOwnerOfPlace = auth()->id() == $this->owner_id;
+
+            if(!$category || !$userIsOwnerOfPlace) continue;
+
+            $this->types()->attach($category);
         }
     }
 
