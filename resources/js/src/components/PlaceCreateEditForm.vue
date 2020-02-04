@@ -5,14 +5,14 @@
                 <v-row>
                     <v-col cols="12" md="4">
                         <v-text-field
-                            v-model="placeToCreate.name"
+                            v-model="placeToEdit.name"
                             label="Place Name"
                             required
                         ></v-text-field>
                     </v-col>
                     <v-col cols="12" md="4">
                         <v-text-field
-                            v-model="placeToCreate.address"
+                            v-model="placeToEdit.address"
                             label="Place Address"
                             required
                         ></v-text-field>
@@ -20,15 +20,15 @@
 
                     <v-col cols="12" md="4">
                         <v-textarea
-                            v-model="placeToCreate.description"
+                            v-model="placeToEdit.description"
                             label="Description"
                             required
                         ></v-textarea>
                     </v-col>
                     <v-col cols="12" md="4">
                         <v-autocomplete
-                            v-model="placeToCreate.types"
-                            :items="placeTypes"
+                            v-model="placeToEdit.types"
+                        :items="placeTypes"
                             item-text="name"
                             item-value="id"
                             outlined
@@ -40,26 +40,12 @@
                         ></v-autocomplete>
                     </v-col>
                     <v-col cols="12" md="4">
-                        <v-autocomplete
-                            v-model="placeToCreate.categories"
-                            :items="categories"
-                            item-text="name"
-                            item-value="id"
-                            outlined
-                            dense
-                            chips
-                            small-chips
-                            label="categories"
-                            multiple
-                        ></v-autocomplete>
-                    </v-col>
-                    <v-col cols="12" md="4">
                         <p>
                         Do you want to add any of your created events to the place?
 
                         </p>
                         <v-autocomplete
-                            v-model="placeToCreate.events"
+                            v-model="placeToEdit.events"
                             :items="events"
                             item-text="name"
                             item-value="id"
@@ -73,7 +59,7 @@
                     </v-col>
                 </v-row>
                 <div style="position: relative; height: 300px;" class="">
-                    <Map :allowCreateMarker="true" @markerLocationChange="markerLocationChange"/>
+                    <Map :propsMarker="place.location" :allowCreateMarker="true" @markerLocationChange="markerLocationChange"/>
                 </div>
                 <v-btn :disabled="!valid" @click="create">Create</v-btn>
         </v-form>
@@ -94,13 +80,12 @@ export default {
             descriptionRules: [
                 v => !!v || "Description is required",
             ],
-            placeToCreate: {
+            placeToEdit: {
                 name: "",
                 description: "",
                 address: "",
                 types: [],
                 events: [],
-                categories: [],
                 location_lat: '',
                 location_lng: ''
             }
@@ -114,18 +99,18 @@ export default {
 
     methods: {
         markerLocationChange(data) {
-           this.placeToCreate.location_lat = data.lat;
-           this.placeToCreate.location_lng = data.lng;
+           this.placeToEdit.location_lat = data.lat;
+           this.placeToEdit.location_lng = data.lng;
         },
         create() {
-            this.$emit('submit', this.placeToCreate);
+            this.$emit('submit', this.placeToEdit);
         },
     },
     watch :{
         place: {
             immediate: true,
             handler(v) {
-                this.placeToCreate = v;
+                this.placeToEdit = v;
             }
         }
     }

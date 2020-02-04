@@ -96,25 +96,26 @@ class PlaceController extends Controller
         ]);
 
         $place->update([
-            'name' => request('name') || $place->name,
-            'address' => request('address') || $place->address,
-            'description' => request('description') || $place->description,
-            'location_lat' => request('location_lat') || $place->location_lat,
-            'location_lng' => request('location_lng') || $place->location_lng
+            'name' => request('name') ?? $place->name,
+            'address' => request('address') ?? $place->address,
+            'description' => request('description') ?? $place->description,
+            'location_lat' => request('location_lat') ?? $place->location_lat,
+            'location_lng' => request('location_lng') ?? $place->location_lng
         ]);
 
+        
         if(request('types')) {
             $place->attachTypes(request('types'));
         }
         
         if(request('categories')) {
-            $place->attachCategories($request('categories'));
+            $place->attachCategories(request('categories'));
         }
 
         if(request('events')) {
             $place->attachEvents(request('events'));
         }
-        
+
         return new PlaceResource($place);
     }
 

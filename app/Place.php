@@ -22,11 +22,11 @@ class Place extends Model
 
     public function attachEvents($events) {
         foreach($events as $eventId) {
-            $event = Event::find($eventId);
+            $event = isset($eventId->name) ? Event::find($eventId->id)->first() : Event::find($eventId);
             $userIsCreatorOfTheEvent = auth()->id() == $event->creator_id;
-            
-            if(!$event || !$userIsCreatorOfTheEvent || $this->events->contains($event)) continue;
 
+            if(!$event || !$userIsCreatorOfTheEvent || $this->events->contains($event)) continue;
+            
             $this->events()->save($event);
         }
     }
