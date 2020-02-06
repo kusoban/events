@@ -59,8 +59,7 @@ export default {
                     icon: this.markerIcon,
                 })
                 marker.addTo(this.map)
-                    .bindPopup(`
-                        <a href="/#/event/${event.id}"><strong>${event.name}</strong></a>
+                    .bindPopup(`<a href="/#/events/${event.id}"><strong>${event.name}</strong></a>
                     `)
             })
         }

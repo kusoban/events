@@ -32,9 +32,7 @@ export default {
     },
     mounted() {
         this.map = L.map("mapid").
-            setView(this.propsMarker.location ? 
-              [this.propsMarker.locaton.lat, this.propsMarker.location.lng]
-            : [46.966823,31.991351]
+            setView([46.966823,31.991351]
             ,16);
 
         var token =
@@ -91,9 +89,8 @@ export default {
     },
     watch: {
         propsMarker: {
-            // immediate: true,
             handler(propsMarker) {
-                if(propsMarker.location) {
+                if(propsMarker.location && propsMarker.location.lat) {
                     this.marker = 'kek';
                     // return console.log(this.marker)
                     this.marker = L.marker(propsMarker.location, {
@@ -105,7 +102,7 @@ export default {
                     }).addTo(this.map)
                         .bindPopup(`${propsMarker.location.lat}  ${propsMarker.location.lng}`)
                         .openPopup();
-                        
+
                     const latlngs = [this.marker.getLatLng()]
                     const markerBounds = L.latLngBounds(latlngs);
                     this.map.setView([propsMarker.location.lat, propsMarker.location.lng]);

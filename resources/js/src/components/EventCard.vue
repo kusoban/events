@@ -5,7 +5,7 @@
     outlined
   >
   <v-card-title>
-  <router-link :to="`/events/${event.id}`">
+  <router-link :to="{name: 'show-event', params: {id: event.id}}">
     {{event.name}}
   </router-link>
   {{event.id}}

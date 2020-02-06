@@ -16,7 +16,7 @@ import DatetimePicker from "vuetify-datetime-picker";
 import EventCreateEditForm from './EventCreateEditForm';
 
 export default {
-    name: "CreateEvent",
+    name: "EditEvent",
     components: {
         Map,
         EventCreateEditForm,
