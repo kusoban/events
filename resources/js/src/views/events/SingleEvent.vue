@@ -2,7 +2,6 @@
 <v-container>
        <v-skeleton-loader
             class="mx-auto"
-            max-width="555px"
             type="article, icons, actions"
             v-if="!event.id"
           ></v-skeleton-loader>
@@ -11,7 +10,6 @@
     v-if="event.id"
     class="mx-auto text-left"
     outlined
-    max-width="555"
   >
   <v-card-title>
     {{event.name}}
@@ -20,21 +18,30 @@
    
    <v-list-item>
       <v-list-item-icon>
-        <v-icon>mdi-calendar</v-icon>
+        <v-icon color="blue">mdi-calendar</v-icon>
       </v-list-item-icon>
       <v-list-item-subtitle>{{getDate() }}</v-list-item-subtitle>
     </v-list-item>
    <v-list-item>
+
       <v-list-item-icon>
-        <v-icon>mdi-clock</v-icon>
+        <v-icon color="amber">mdi-clock</v-icon>
       </v-list-item-icon>
       <v-list-item-subtitle>{{getTime()}} / <span :class="['humanTime', getUrgency()]">{{getHumanDate()}}</span></v-list-item-subtitle>
     </v-list-item>
+
    <v-list-item v-if="usersWhoRegistered.length">
       <v-list-item-icon>
         <v-icon>mdi-account-group</v-icon>
       </v-list-item-icon>
       <v-list-item-subtitle><span><a @click="showUsersWhoRegistered = !showUsersWhoRegistered" href="javascript:void(0)">{{`${usersWhoRegistered.length} ${usersWhoRegistered.length > 1 ? 'people' : 'person'}`}}</a> {{usersWhoRegistered.length > 1 ? 'have' : 'has'}} registered to this event</span></v-list-item-subtitle>
+    </v-list-item>
+
+   <v-list-item v-if="event.place">
+      <v-list-item-icon>
+        <v-icon color="red">mdi-map-marker</v-icon>
+      </v-list-item-icon>
+      <v-list-item-subtitle><router-link :to="{name: 'show-place', params: {id: event.place.id}}">{{event.place.name}}</router-link></v-list-item-subtitle>
     </v-list-item>
   </div>
     <v-card-text>

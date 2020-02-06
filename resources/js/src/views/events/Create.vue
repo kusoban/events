@@ -4,6 +4,7 @@
                 <EventCreateEditForm
                     button-text="Create" 
                     :categories="categories" 
+                    :event="{}"
                     @submit="update"
                 ></EventCreateEditForm>
             </v-container>
@@ -23,10 +24,6 @@ export default {
     mounted() {
         this.$api.get('/categories').then(response => {
             this.categories = response.data
-        })
-
-        this.$api.get(`/events/${this.$route.params.id}`).then(response => {
-            this.event = response.data;
         })
     },
     data() {

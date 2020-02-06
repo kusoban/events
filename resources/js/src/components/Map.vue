@@ -91,8 +91,6 @@ export default {
         propsMarker: {
             handler(propsMarker) {
                 if(propsMarker.location && propsMarker.location.lat) {
-                    this.marker = 'kek';
-                    // return console.log(this.marker)
                     this.marker = L.marker(propsMarker.location, {
                         title: "Resource location",
                         alt: "Resource Location",

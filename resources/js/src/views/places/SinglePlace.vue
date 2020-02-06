@@ -2,8 +2,7 @@
 <v-container>
        <v-skeleton-loader
             class="mx-auto"
-            max-width="555px"
-            type="article, icons, actions"
+            type="article, icons"
             v-if="!place.id"
           ></v-skeleton-loader>
 
@@ -11,7 +10,6 @@
     v-if="place.id"
     class="mx-auto text-left"
     outlined
-    max-width="555"
   >
   <v-card-title>
     {{place.name}}
@@ -20,7 +18,7 @@
    
    <v-list-item>
       <v-list-item-icon>
-        <v-icon>mdi-earth</v-icon>
+        <v-icon color="red">mdi-map-marker</v-icon>
       </v-list-item-icon>
       <v-list-item-subtitle>{{place.address}}</v-list-item-subtitle>
     </v-list-item>
