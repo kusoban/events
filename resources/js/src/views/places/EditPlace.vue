@@ -1,7 +1,14 @@
 <template>
     <v-flex>
             <v-container>
-                <PlaceCreateEditForm @submit="updatePlace" :place="place" :categories="categories" :place-types="placeTypes" :events="events"/>
+                <PlaceCreateEditForm 
+                    @submit="updatePlace" 
+                    buttonText="Update" 
+                    :place="place" 
+                    :categories="categories" 
+                    :place-types="placeTypes" 
+                    :events="events"
+                />
             </v-container>
     </v-flex>
 </template>

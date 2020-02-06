@@ -50,7 +50,7 @@
     
    </RegisteredUsersList>
    <div style="position: relative; height: 300px;" class="">
-  <Map :propsMarker="event.location" :allowCreateMarker="false"/>
+  <Map :propsMarker="{location: event.location, draggable: false}" :allowCreateMarker="false"/>
    </div>
 </v-container>
 </template>

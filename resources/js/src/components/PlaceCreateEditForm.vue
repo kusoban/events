@@ -61,7 +61,7 @@
                 <div style="position: relative; height: 300px;" class="">
                     <Map :propsMarker="place.location" :allowCreateMarker="true" @markerLocationChange="markerLocationChange"/>
                 </div>
-                <v-btn :disabled="!valid" @click="create">Create</v-btn>
+                <v-btn :disabled="!valid" @click="$emit('submit', placeToEdit)">{{buttonText}}</v-btn>
         </v-form>
         </v-card>
 </template>
@@ -70,7 +70,7 @@ import Map from './Map';
 export default {
     name: "CreateEditPlaceForm",
     components: {Map},
-    props: ['place', 'categories', 'placeTypes', 'events'],
+    props: ['button-text', 'place', 'categories', 'placeTypes', 'events'],
     data() {
         return {
             valid: false,
@@ -92,18 +92,10 @@ export default {
         };
     },
 
-    mounted() {
-        
-
-    },
-
     methods: {
         markerLocationChange(data) {
            this.placeToEdit.location_lat = data.lat;
            this.placeToEdit.location_lng = data.lng;
-        },
-        create() {
-            this.$emit('submit', this.placeToEdit);
         },
     },
     watch :{

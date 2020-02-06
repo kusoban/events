@@ -52,7 +52,7 @@ class EventController extends Controller
         $event = [
             'name' => request('name'),
             'description' => request('description'),
-            'starts_at' => date('Y-m-d H:i:s', strtotime(request('starts_at'))),
+            'starts_at' => date('Y-m-d H:i', strtotime(request('starts_at'))),
             'creator_id' => $user->id,
             'creator_email' => $user->email,
             'location_lat' => request('location_lat'),
@@ -122,28 +122,14 @@ class EventController extends Controller
         return response('success', 200);
     }
 
-    public function toggleRegister()
-    {
+    
+
+    public function getMyEvents() {
         $user = auth()->user();
-        $eventId = request('eventId');
-        $event = Event::find($eventId);
 
-        if (!$event) return response()->json('not found', 404);
+        $events = $user->events;
 
-        $user->registeredToEvents()->toggle($event);
-        return response(['result' => 'success'], 200);
-    }
-
-    public function toggleFavorite()
-    {
-        $user = auth()->user();
-        $eventId = request('eventId');
-        $event = Event::find($eventId);
-
-        if (!$event) return response()->json('not found', 404);
-
-        $user->favoriteEvents()->toggle($event->id);
-        return response(['result' => 'success'], 200);
+        return EventResource::collection($events);
     }
 
     public function getEventsUserIsRegisteredTo()
@@ -173,5 +159,29 @@ class EventController extends Controller
     public function getEventPlace(Event $event) {
         // return $event->place;
         return new PlaceResource($event->place);
+    }
+
+    public function toggleRegister()
+    {
+        $user = auth()->user();
+        $eventId = request('eventId');
+        $event = Event::find($eventId);
+
+        if (!$event) return response()->json('not found', 404);
+
+        $user->registeredToEvents()->toggle($event);
+        return response(['result' => 'success'], 200);
+    }
+
+    public function toggleFavorite()
+    {
+        $user = auth()->user();
+        $eventId = request('eventId');
+        $event = Event::find($eventId);
+
+        if (!$event) return response()->json('not found', 404);
+
+        $user->favoriteEvents()->toggle($event->id);
+        return response(['result' => 'success'], 200);
     }
 }

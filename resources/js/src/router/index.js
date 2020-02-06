@@ -9,18 +9,22 @@ import axios from '../axios/api'
 import Home from '../views/Home.vue'
 import Login from '../views/auth/Login'
 import Register from '../views/auth/Register'
+
 import Events from '../views/events/Events'
-import CreateEvent from '../views/events/Create'
-import CreatePlace from '../views/places/CreatePlace'
-import EditPlace from '../views/places/EditPlace'
 import SingleEvent from '../views/events/SingleEvent'
-import SinglePlace from '../views/places/SinglePlace'
+import CreateEvent from '../views/events/Create'
+import EditEvent from '../views/events/Edit'
 import EventsSearchResults from '../views/events/SearchResults'
 import CategoryEvents from '../views/events/CategoryEvents'
 import FavoriteEvents from '../views/events/FavoriteEvents'
 import RegisteredToEvents from '../views/events/RegisteredToEvents'
 import Search from '../views/events/Search'
 import EventsMap from '../views/Map'
+
+import SinglePlace from '../views/places/SinglePlace'
+import CreatePlace from '../views/places/CreatePlace'
+import EditPlace from '../views/places/EditPlace'
+
 
 
 function requireAuth (to, from, next) {
@@ -74,6 +78,11 @@ const routes = [
     path: '/events/:id',
     name: 'show-event',
     component: SingleEvent
+  },
+  {
+    path: '/events/:id/edit',
+    name: 'show-event',
+    component: EditEvent
   },
   {
     path: '/places/:id',

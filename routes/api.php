@@ -36,6 +36,7 @@ Route::group(['prefix' => 'users'], function(){
 });
 
 Route::group(['prefix' => 'events'], function(){
+    Route::get('/my', 'Api\EventController@getMyEvents');
     Route::post('/register', 'Api\EventController@toggleRegister');
     Route::get('/registered', 'Api\EventController@getEventsUserIsRegisteredTo');
    

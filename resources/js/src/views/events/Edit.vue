@@ -1,10 +1,11 @@
 <template>
     <v-flex>
             <v-container>
-                <EventCreateEditForm
-                    button-text="Create" 
+                <EventCreateEditForm 
+                    button-text="Update" 
+                    :event="event"
                     :categories="categories" 
-                    @submit="update"
+                    @submit="create"
                 ></EventCreateEditForm>
             </v-container>
     </v-flex>
@@ -20,37 +21,32 @@ export default {
         Map,
         EventCreateEditForm,
     },
-    mounted() {
-        this.$api.get('/categories').then(response => {
-            this.categories = response.data
-        })
 
-        this.$api.get(`/events/${this.$route.params.id}`).then(response => {
-            this.event = response.data;
-        })
-    },
     data() {
         return {
+            event: {},
             categories: [],
-            event: {
-                name: '',
-                description: '',
-                starts_at: '',
-                categories: [],
-                tags: [],
-                location: {
-                    lat: '',
-                    lng: '',
-                }
-            }
         };
     },
 
+    mounted() {
+        this.$api.get(`/events/${this.$route.params.id}`).then(response => {
+            this.event = response.data;
+        }).catch(err => {
+            console.log('err');
+        })
+
+        this.$api.get('/categories').then(response => {
+            this.categories = response.data
+        }).catch(err => {
+            console.log('err');
+        })
+    },
+   
     methods: {
-        update(event) {
-            // return console.log(this.eventToCreate.starts_at)
-            this.$api.post(
-                "/events",
+        create(event) {
+            this.$api.put(
+                `/events/${event.id}`,
                 event,
                 {
                     headers: {

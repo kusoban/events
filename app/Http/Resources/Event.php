@@ -23,14 +23,13 @@ class Event extends JsonResource
             $isFavorite = $this->usersWhoFavorited->contains($user->id);
             $isRegisteredTo = $this->usersWhoRegistered->contains($user->id);
         }
-
         return [
             'id' => $this->id,
             'place' => $this->place ? ['id' => $this->place->id, 'name' => $this->place->name] : null,
             'creator_id' => $this->creator_id,
             'creator_email' => $this->creator_email,
             'name' => $this->name,
-            'starts_at' => $this->starts_at,
+            'starts_at' => date('Y-m-d H:i', strtotime($this->starts_at)),
             'description' => $this->description,
             'categories' => $this->categories()->get()
                 ->map(function ($category) {

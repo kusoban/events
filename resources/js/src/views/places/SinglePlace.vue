@@ -24,20 +24,15 @@
       </v-list-item-icon>
       <v-list-item-subtitle>{{place.address}}</v-list-item-subtitle>
     </v-list-item>
-   <!-- <v-list-item v-if="true">
-      <v-list-item-icon>
-        <v-icon>mdi-account-group</v-icon>
-      </v-list-item-icon>
-      <v-list-item-subtitle><span><a @click="showUsersWhoLikes = !showUsersWhoLikes" href="javascript:void(0)">{{`${usersWhoRegistered.length} ${usersWhoRegistered.length > 1 ? 'people' : 'person'}`}}</a> {{usersWhoRegistered.length > 1 ? 'like' : 'likes'}} this place</span></v-list-item-subtitle>
-    </v-list-item> -->
   </div>
     <v-card-text>
       {{place.description}}
     </v-card-text>
     </v-card>
    <div style="position: relative; height: 300px;" class="">
-      <Map :propsMarker="place.location" :allowCreateMarker="false"/>
+      <Map :propsMarker="{location: place.location, draggable: false}" :allowCreateMarker="false"/>
    </div>
+   <h2>Soon at {{place.name}}:</h2>
    <EventsGrid :events="placeEvents" :loaded="true"></EventsGrid>
 </v-container>
 </template>
