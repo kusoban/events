@@ -17,6 +17,7 @@ import EditEvent from '../views/events/Edit'
 import EventsSearchResults from '../views/events/SearchResults'
 import CategoryEvents from '../views/events/CategoryEvents'
 import FavoriteEvents from '../views/events/FavoriteEvents'
+import MyEvents from '../views/events/MyEvents'
 import RegisteredToEvents from '../views/events/RegisteredToEvents'
 import Search from '../views/events/Search'
 import EventsMap from '../views/Map'
@@ -24,6 +25,7 @@ import EventsMap from '../views/Map'
 import SinglePlace from '../views/places/SinglePlace'
 import CreatePlace from '../views/places/CreatePlace'
 import EditPlace from '../views/places/EditPlace'
+import MyPlaces from '../views/places/MyPlaces'
 
 
 
@@ -73,6 +75,18 @@ const routes = [
     name: 'favorite-events',
     beforeEnter: requireAuth,
     component: FavoriteEvents,
+  },
+  {
+    path: '/places/my',
+    name: 'my-places',
+    beforeEnter: requireAuth,
+    component: MyPlaces,
+  },
+  {
+    path: '/events/my',
+    name: 'my-events',
+    beforeEnter: requireAuth,
+    component: MyEvents,
   },
   {
     path: '/events/:id',

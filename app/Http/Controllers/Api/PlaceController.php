@@ -159,4 +159,13 @@ class PlaceController extends Controller
         return EventResource::collection($place->events()->orderBy('starts_at', 'asc')->get());
     }
 
+    
+    public function getMyPlaces() {
+        $user = auth()->user();
+
+        $places = $user->places;
+
+        return PlaceResource::collection($places);
+    }
+
 }

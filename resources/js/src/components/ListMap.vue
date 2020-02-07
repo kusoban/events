@@ -36,11 +36,12 @@ export default {
     props: {
         paginationLength: Number,
         events: Array,
-        loaded: Boolean
+        loaded: Boolean,
+        propsListMode:  Boolean,
     },
     data() {
         return {
-            listMode: false
+            listMode: this.propsListMode || false
         };
     },
     mounted() {

@@ -14,6 +14,11 @@
   <v-card-title>
     {{place.name}}
   </v-card-title>
+  <v-card-text>
+
+                  <v-chip class="mr-2" v-for="type in place.types" :key="type.id">{{type.name}}</v-chip>
+
+  </v-card-text>
   <div class="d-flex flex-wrap">
    
    <v-list-item>

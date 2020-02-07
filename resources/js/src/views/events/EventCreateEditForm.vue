@@ -97,19 +97,22 @@ export default {
 
     methods: {
         markerLocationChange(data) {
-            console.log(data)
             this.eventToCreateOrEdit.location_lat = data.lat;
             this.eventToCreateOrEdit.location_lng = data.lng;
         },
         addTag() {
             if (!this.tag) return;
+
             let tags = this.eventToCreateOrEdit.tags;
+            
             if (tags.includes(this.tag)) return;
+            
             this.eventToCreateOrEdit.tags.push(this.tag);
             this.tag = "";
         },
         removeTag(tag) {
-            this.eventToCreateOrEdit.tags = this.eventToCreateOrEdit.tags.filter(
+            this.eventToCreateOrEdit.tags = this.eventToCreateOrEdit.tags
+            .filter(
                 v => v != tag
             );
         }

@@ -27,17 +27,6 @@ export default {
             categories: [],
             placeTypes: [],
             events: [],
-            valid: false,
-            nameRules: [
-                v => !!v || "Name is required",
-                v => v.length >= 3 || "Name must be at least 3 characters"
-            ],
-            descriptionRules: [
-                v => !!v || "Description is required",
-                v =>
-                    v.length >= 10 ||
-                    "Description must be at least 10 characters"
-            ],
             placeToCreate: {
                 types: [],
                 events: [],
@@ -78,7 +67,9 @@ export default {
                         'Authorization': 'Bearer ' + this.$store.getters.user.accessToken
                     }
                 }).then(response => {
-                    this.$router.push(`/places/${response.data.id}`)
+                    this.$router.push(`/places/${response.data.id}`);
+                }).catch(err => {
+                    console.log(err.response);
                 })
         },
     }

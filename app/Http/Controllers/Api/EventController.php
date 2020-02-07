@@ -107,6 +107,17 @@ class EventController extends Controller
         ]);
 
         $event->update(request()->all());
+        $categories = request('categories');
+        $tags = request('tags');
+        
+        if ($categories) {
+            $event->addCategories($categories);
+        }
+
+        if ($tags) {
+            $event->addTags($tags);
+        }
+        
         return new EventResource($event);
     }
 

@@ -75,9 +75,14 @@ Route::group(['prefix' => 'search'], function(){
     Route::get('/category', 'Api\SearchController@category');
 });
 
+Route::group(['prefix' => 'places'], function() {
+    Route::get('/my', 'Api\PlaceController@getMyPlaces');
+    Route::post('/{place}/events/{event}', 'Api\PlaceController@attachEvent');
+    Route::put('/{place}/events/{event}', 'Api\PlaceController@detachEvent');
+    Route::get('/{place}/events', 'Api\PlaceController@getPlaceEvents');
+
+});
 Route::apiResource('places', 'Api\PlaceController');
+
 Route::apiResource('place-types', 'Api\PlaceTypeController');
 
-Route::post('places/{place}/events/{event}', 'Api\PlaceController@attachEvent');
-Route::put('places/{place}/events/{event}', 'Api\PlaceController@detachEvent');
-Route::get('places/{place}/events', 'Api\PlaceController@getPlaceEvents');

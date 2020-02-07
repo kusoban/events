@@ -51,24 +51,32 @@
                         </v-list-item-content>
                     </v-list-item>
                 </router-link>
+                <router-link to="/places/my">
+                    <v-list-item link v-if="$store.getters.userIsLoggedIn">
+                        <v-list-item-action>
+                            <v-icon>mdi-home</v-icon>
+                        </v-list-item-action>
 
-                 <v-list-item>
-                    <v-list-item-content>
-                        <v-text-field
-                            solo-inverted
-                            flat
-                            hide-details
-                            label="Search"
-                            prepend-inner-icon="search"
-                            v-model="searchText"
-                            @keypress.enter="search"
-                            ref="searchInput"
-                        />
-                        <!-- </div> -->
-                        <v-btn small text @click="search">Search</v-btn>
-                    </v-list-item-content>
-                </v-list-item>
-                
+                        <v-list-item-content>
+                            My Places
+                            <!-- <v-list-item-title>Home</v-list-item-title> -->
+                        </v-list-item-content>
+                    </v-list-item>
+                </router-link>
+                <router-link to="/events/my">
+                    <v-list-item link v-if="$store.getters.userIsLoggedIn">
+                        <v-list-item-action>
+                            <v-icon>mdi-home</v-icon>
+                        </v-list-item-action>
+
+                        <v-list-item-content>
+                            My Events
+                            <!-- <v-list-item-title>Home</v-list-item-title> -->
+                        </v-list-item-content>
+                    </v-list-item>
+                </router-link>
+
+
                 <router-link to="/register">
                     <v-list-item
                         link
@@ -111,8 +119,24 @@
                         <!-- <v-list-item-title>Home</v-list-item-title> -->
                     </v-list-item-content>
                 </v-list-item>
-
-               
+                
+                 <v-list-item>
+                    <v-list-item-content>
+                        <v-text-field
+                            solo-inverted
+                            flat
+                            hide-details
+                            label="Search"
+                            prepend-inner-icon="search"
+                            v-model="searchText"
+                            @keypress.enter="search"
+                            ref="searchInput"
+                        />
+                        <!-- </div> -->
+                        <v-btn small text @click="search">Search</v-btn>
+                    </v-list-item-content>
+                </v-list-item>
+                
             </v-list>
         </v-navigation-drawer>
         <v-app-bar app clipped-left color="white">
