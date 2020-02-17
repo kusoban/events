@@ -16,7 +16,16 @@
   </v-card-title>
   <v-card-text>
 
-                  <v-chip class="mr-2" v-for="type in place.types" :key="type.id">{{type.name}}</v-chip>
+                  <v-chip class="mr-2" 
+                    v-for="type in place.types" 
+                    :key="type.id" 
+                    @click="$router.push({
+                      name: 'places-by-type', 
+                      params: {
+                        name: type.name, 
+                        typeId: type.id
+                      } 
+                    })">{{type.name}}</v-chip>
 
   </v-card-text>
   <div class="d-flex flex-wrap">
@@ -36,6 +45,7 @@
       <Map :propsMarker="{location: place.location, draggable: false}" :allowCreateMarker="false"/>
    </div>
    <h2>Soon at {{place.name}}:</h2>
+   <v-btn right color="green" dark  fab><v-icon>mdi-plus</v-icon></v-btn>
    <EventsGrid :events="placeEvents" :loaded="true"></EventsGrid>
 </v-container>
 </template>

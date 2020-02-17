@@ -8,9 +8,8 @@
 import "leaflet/dist/leaflet";
 import "leaflet/dist/leaflet.css";
 export default {
-    name: "EventsMap",
+    name: "PlacesMap",
     props: {
-        events: Array,
         places: Array,
     },
     data() {
@@ -49,25 +48,23 @@ export default {
             ).addTo(this.map);
         },
         renderMarkers() {
-            console.log('kekich')
-             this.events.forEach(event => {
-                // return console.log(event.location);
-                if(!event.location) return;
+             this.places.forEach(place => {
+                if(!place.location) return;
                 
-                const latlng = new L.LatLng(event.location.lat, event.location.lng);
+                const latlng = new L.LatLng(place.location.lat, place.location.lng);
                 const marker = L.marker(latlng, {
-                    title: event.name,
+                    title: place.name,
                     icon: this.markerIcon,
                 })
                 marker.addTo(this.map)
-                    .bindPopup(`<a href="/#/events/${event.id}"><strong>${event.name}</strong></a>
-                    `)
+                    .bindPopup(`<a href="/#/places/${place.id}"><strong>${place.name}</strong></a>
+                `)
             })
         }
     },
     watch: {
-        events: {
-            handler (events) {
+        places: {
+            handler (places) {
                this.renderMarkers();
             }
         },

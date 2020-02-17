@@ -26,6 +26,7 @@ import SinglePlace from '../views/places/SinglePlace'
 import CreatePlace from '../views/places/CreatePlace'
 import EditPlace from '../views/places/EditPlace'
 import MyPlaces from '../views/places/MyPlaces'
+import PlacesByType from '../views/places/PlacesByType'
 
 
 
@@ -81,6 +82,12 @@ const routes = [
     name: 'my-places',
     beforeEnter: requireAuth,
     component: MyPlaces,
+  },
+  {
+    path: '/places/type/:name',
+    name: 'places-by-type',
+    props: true,
+    component: PlacesByType,
   },
   {
     path: '/events/my',

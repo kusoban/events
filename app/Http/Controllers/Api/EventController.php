@@ -62,12 +62,13 @@ class EventController extends Controller
 
         $event = Event::create($event);
 
-        if(request('place_id')) {
-            $event->attachToPlace($user->id, request('place_id'));
-        }
-
+        $placeId = request('place_id');
         $categories = request('categories');
         $tags = request('tags');
+
+        if($placeId) {
+            $event->attachToPlace($user->id, $placeId);
+        }
         
         if ($categories) {
             $event->addCategories($categories);

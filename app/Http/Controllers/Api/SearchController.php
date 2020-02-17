@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Event;
+use App\Place;
 use App\Category;
 use App\Tag;
 use App\Http\Resources\Event as EventResource;
+use App\Http\Resources\Place as PlaceResource;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 
 class SearchController extends Controller
@@ -69,5 +72,20 @@ class SearchController extends Controller
         $category = Category::where('name', request('name'))->first();
         $events = $category->events()->whereDate('starts_at', '>=', Carbon::today())->paginate(15);
         return EventResource::collection($events);
+    }
+
+    public function getPlacesByTypes() {
+        if(request('place_types_ids')) {
+            $places = Place::whereHas('types', function (Builder $query) {
+                $query->whereIn('id', request('place_types_ids'));
+            })->get();
+
+        }
+        if(request('place_types_names')) {
+            $places = Place::whereHas('types', function (Builder $query) {
+                $query->whereIn('name', request('place_types_names'));
+            })->get();
+        }
+        return PlaceResource::collection($places);
     }
 }

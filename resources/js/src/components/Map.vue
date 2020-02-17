@@ -14,6 +14,7 @@ export default {
         return {
             map: null,
             marker: null,
+            markers: [],
             clickLatLng: {
                 lat: '',
                 lng: ''
@@ -51,9 +52,12 @@ export default {
 
        
 
-      
+        
         // Click works only in events/place Create/Edit components
         const onMapClick = (e) => {
+            console.log(this.allowCreateMarker);
+            if(!this.allowCreateMarker) return
+
             this.$emit('markerLocationChange', e.latlng);
 
             if (this.marker) {
@@ -78,11 +82,7 @@ export default {
                 this.bindPopup(chagedPos.toString()).openPopup();
             });
         }
-        if(this.allowCreateMarker) {
-            this.map.on("click", onMapClick);
-        }
-         
-
+        this.map.on("click", onMapClick);
         
     },
     methods: {
@@ -91,6 +91,8 @@ export default {
         propsMarker: {
             handler(propsMarker) {
                 if(propsMarker.location && propsMarker.location.lat) {
+                    if(this.marker) this.map.removeLayer(this.marker);
+
                     this.marker = L.marker(propsMarker.location, {
                         title: "Resource location",
                         alt: "Resource Location",

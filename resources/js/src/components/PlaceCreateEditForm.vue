@@ -28,7 +28,7 @@
                     <v-col cols="12" md="4">
                         <v-autocomplete
                             v-model="placeToEdit.types"
-                        :items="placeTypes"
+                            :items="placeTypes"
                             item-text="name"
                             item-value="id"
                             outlined

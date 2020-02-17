@@ -4,7 +4,8 @@
                 <EventCreateEditForm
                     button-text="Create" 
                     :categories="categories" 
-                    :event="{}"
+                    :event="event"
+                    :places="places"
                     @submit="update"
                 ></EventCreateEditForm>
             </v-container>
@@ -25,10 +26,19 @@ export default {
         this.$api.get('/categories').then(response => {
             this.categories = response.data
         })
+
+        this.$api.get('/places/my', {
+            headers: {
+                Authorization: 'Bearer ' + this.$store.getters.accessToken,
+            }
+        }).then(response => {
+            this.places = response.data
+        })
     },
     data() {
         return {
             categories: [],
+            places: [],
             event: {
                 name: '',
                 description: '',

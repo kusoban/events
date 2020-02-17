@@ -8,34 +8,60 @@
             <v-radio label="Map" :value="false"></v-radio>
             <v-radio label="List" :value="true"></v-radio>
         </v-radio-group>
-        <EventsGrid
-            v-if="listMode"
-            @changePage="(page) => $emit('changePage', page)"
-            :paginationLength="paginationLength"
-            :loaded="loaded"
-            :events="events"
-        ></EventsGrid>
-        <div v-if="!listMode && events.length" style="position: relative; height: 500px;">
-            <EventsMap 
-                :loaded="loaded" 
+
+        <div v-if="events.length">
+
+            <EventsGrid
+                v-if="listMode"
+                @changePage="(page) => $emit('changePage', page)"
+                :paginationLength="paginationLength"
+                :loaded="loaded"
                 :events="events"
-            ></EventsMap>
+            ></EventsGrid>
+            <div v-if="!listMode" style="position: relative; height: 500px;">
+                <EventsMap 
+                    :loaded="loaded"
+                    :events="events"
+                ></EventsMap>
+            </div>
+        </div>
+
+        <div v-if="places && places.length">
+            <PlacesGrid
+                v-if="listMode"
+                @changePage="(page) => $emit('changePage', page)"
+                :paginationLength="paginationLength"
+                :loaded="loaded"
+                :places="places"
+            ></PlacesGrid>
+        
+            <div v-if="!listMode" style="position: relative; height: 500px;">
+                <PlacesMap 
+                    :loaded="loaded"
+                    :places="places"
+                ></PlacesMap>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 import EventsGrid from "./EventsGrid";
+import PlacesGrid from "../views/places/PlacesGrid";
 import EventsMap from "./EventsMap";
+import PlacesMap from "./PlacesMap";
 export default {
     name: "ListMap",
     components: {
         EventsGrid,
-        EventsMap
+        EventsMap,
+        PlacesGrid,
+        PlacesMap
     },
     props: {
         paginationLength: Number,
         events: Array,
+        places: Array,
         loaded: Boolean,
         propsListMode:  Boolean,
     },

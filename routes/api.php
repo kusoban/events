@@ -73,6 +73,7 @@ Route::group(['prefix' => 'search'], function(){
     Route::get('/', 'Api\SearchController@index');
     Route::get('/filter', 'Api\SearchController@filter');
     Route::get('/category', 'Api\SearchController@category');
+    Route::get('/places/types', 'Api\SearchController@getPlacesByTypes');
 });
 
 Route::group(['prefix' => 'places'], function() {
