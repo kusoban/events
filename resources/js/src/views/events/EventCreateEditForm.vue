@@ -21,11 +21,11 @@
                     <p>Attach event to one of your places?</p>
                     <v-select 
                         label="You can leave it empty" 
-                        :items="[{name: 'Do not attach', id: false}, ...places]"  
+                        :items="[{name: 'Do not attach', id: null}, ...places]"  
                         item-text="name"
                         item-value="id"
                         v-model="eventToCreateOrEdit.place_id"
-                    >
+                    >                       
                     </v-select>
                 </v-col>
 
@@ -160,8 +160,8 @@ export default {
         },
         placeId: {
             handler(id) {
-                console.log(this.eventToCreateOrEdit.place_id)
-                console.log(!this.eventToCreateOrEdit.place_id)
+                console.log('start')
+
                 if(!id) {
                     this.propsMarker = {
                         location: this.event.location,
@@ -171,8 +171,11 @@ export default {
 
                 const place = this.places.find(place => place.id == id);
 
+                console.log('here', id, )
+                console.log('this.places', this.places)
+                console.log('place', place);
                 if(!place) return;
-
+                this.event.location = place.location;
                 this.propsMarker = {
                     location: place.location
                 }

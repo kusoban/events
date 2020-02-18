@@ -102,6 +102,8 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
+        $user = auth()->user();
+        
         request()->validate([
             'name' => 'required|min:2',
             'description' => 'required|min:5'
@@ -110,6 +112,11 @@ class EventController extends Controller
         $event->update(request()->all());
         $categories = request('categories');
         $tags = request('tags');
+        $placeId = request('place_id');
+        
+        if($placeId) {
+            $event->attachToPlace($user->id, $placeId);
+        }
         
         if ($categories) {
             $event->addCategories($categories);
